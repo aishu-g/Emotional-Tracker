@@ -129,9 +129,49 @@ function ActionPlansPage() {
     addChallenge,
     addSolution,
     deleteActionItem,
+    addActionItem,
   } = useWorkspaceStore();
 
   const [activeActionId, setActiveActionId] = useState<string>("");
+  const [taskDialogOpen, setTaskDialogOpen] = useState(false);
+  const [taskTitle, setTaskTitle] = useState("");
+  const [assignee, setAssignee] = useState("");
+  const [priority, setPriority] = useState<"Low" | "Medium" | "High" | "Urgent">("Medium");
+  const [dueDate, setDueDate] = useState("2026-07-31");
+  const [actionSmartId, setActionSmartId] = useState("");
+
+  useEffect(() => {
+    if (smartFilter && smartFilter !== "all") {
+      setActionSmartId(smartFilter);
+    } else if (smartGoals.length > 0) {
+      setActionSmartId(smartGoals[0].id);
+    }
+  }, [smartFilter, smartGoals, taskDialogOpen]);
+
+  const handleCreateTask = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!taskTitle || !assignee || !actionSmartId) {
+      toast.error("Please fill in required fields and select a parent SMART goal.");
+      return;
+    }
+    const added = await addActionItem({
+      task: taskTitle,
+      assignedTo: assignee,
+      priority,
+      dueDate,
+      smartGoalId: actionSmartId,
+    });
+    if (added) {
+      toast.success(`Action Item "${added.task}" assigned to ${added.assignedTo}!`);
+      setActiveActionId(added.id);
+    } else {
+      toast.error("Failed to create Action Item.");
+    }
+    setTaskTitle("");
+    setAssignee("");
+    setPriority("Medium");
+    setTaskDialogOpen(false);
+  };
 
   useEffect(() => {
     if (smartGoalId) {
@@ -581,6 +621,99 @@ function ActionPlansPage() {
             <SelectItem value="Done">Done</SelectItem>
           </SelectContent>
         </Select>
+
+        <Dialog open={taskDialogOpen} onOpenChange={setTaskDialogOpen}>
+          <DialogTrigger asChild>
+            <Button size="sm" className="h-9 cursor-pointer gap-1">
+              <Plus className="mr-1.5 h-3.5 w-3.5" /> New action plan
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[480px]">
+            <form onSubmit={handleCreateTask}>
+              <DialogHeader>
+                <DialogTitle>Create Action Plan / Task</DialogTitle>
+                <DialogDescription>
+                  Establish a specific, direct task or action plan laddered to a SMART goal.
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="grid gap-4 py-4">
+                <div className="space-y-1.5">
+                  <Label>Parent SMART Goal *</Label>
+                  <Select value={actionSmartId} onValueChange={setActionSmartId}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select parent SMART goal" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {smartGoals.map((sg) => (
+                        <SelectItem key={sg.id} value={sg.id}>
+                          {sg.title}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="task-title">Task Title *</Label>
+                  <Input
+                    id="task-title"
+                    placeholder="e.g. Set up database indices for customer log table"
+                    value={taskTitle}
+                    onChange={(e) => setTaskTitle(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="task-assignee">Assignee *</Label>
+                  <Input
+                    id="task-assignee"
+                    placeholder="e.g. Priya Anand"
+                    value={assignee}
+                    onChange={(e) => setAssignee(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <Label>Priority</Label>
+                    <Select value={priority} onValueChange={(val: any) => setPriority(val)}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Low">Low</SelectItem>
+                        <SelectItem value="Medium">Medium</SelectItem>
+                        <SelectItem value="High">High</SelectItem>
+                        <SelectItem value="Urgent">Urgent</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="task-due">Due Date</Label>
+                    <Input
+                      id="task-due"
+                      type="date"
+                      value={dueDate}
+                      onChange={(e) => setDueDate(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button variant="outline" type="button" className="cursor-pointer">
+                    Cancel
+                  </Button>
+                </DialogClose>
+                <Button type="submit" className="cursor-pointer">Create Task</Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {view === "cards" ? (

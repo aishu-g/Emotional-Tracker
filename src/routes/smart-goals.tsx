@@ -181,94 +181,6 @@ function SmartGoalsPage() {
                 <List className="h-3.5 w-3.5" /> Table
               </button>
             </div>
-
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger asChild>
-                <Button size="sm" className="cursor-pointer gap-1">
-                  <Plus className="mr-1.5 h-3.5 w-3.5" /> New SMART goal
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[480px]">
-                <form onSubmit={handleCreate}>
-                  <DialogHeader>
-                    <DialogTitle>Create SMART Goal</DialogTitle>
-                    <DialogDescription>
-                      Establish a specific, measurable key target laddered to an objective.
-                    </DialogDescription>
-                  </DialogHeader>
-
-                  <div className="grid gap-4 py-4">
-                    <div className="space-y-1.5">
-                      <Label>Parent Organization Goal *</Label>
-                      <Select value={parentId} onValueChange={setParentId}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select parent objective" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {orgGoals.map((og) => (
-                            <SelectItem key={og.id} value={og.id}>
-                              {og.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <Label htmlFor="smart-title">Goal Title *</Label>
-                      <Input
-                        id="smart-title"
-                        placeholder="e.g. Reduce server latency to <200ms"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        required
-                      />
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <Label htmlFor="smart-owner">Goal Owner *</Label>
-                      <Input
-                        id="smart-owner"
-                        placeholder="e.g. Priya Anand"
-                        value={owner}
-                        onChange={(e) => setOwner(e.target.value)}
-                        required
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="space-y-1.5">
-                        <Label htmlFor="smart-start">Start Date</Label>
-                        <Input
-                          id="smart-start"
-                          type="date"
-                          value={startDate}
-                          onChange={(e) => setStartDate(e.target.value)}
-                        />
-                      </div>
-                      <div className="space-y-1.5">
-                        <Label htmlFor="smart-due">Due Date</Label>
-                        <Input
-                          id="smart-due"
-                          type="date"
-                          value={dueDate}
-                          onChange={(e) => setDueDate(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <DialogFooter>
-                    <DialogClose asChild>
-                      <Button variant="outline" type="button" className="cursor-pointer">
-                        Cancel
-                      </Button>
-                    </DialogClose>
-                    <Button type="submit" className="cursor-pointer">Create SMART Goal</Button>
-                  </DialogFooter>
-                </form>
-              </DialogContent>
-            </Dialog>
           </div>
         }
       />
@@ -306,6 +218,94 @@ function SmartGoalsPage() {
             <SelectItem value="Completed">Completed</SelectItem>
           </SelectContent>
         </Select>
+
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <DialogTrigger asChild>
+            <Button size="sm" className="h-9 cursor-pointer gap-1">
+              <Plus className="mr-1.5 h-3.5 w-3.5" /> New SMART goal
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[480px]">
+            <form onSubmit={handleCreate}>
+              <DialogHeader>
+                <DialogTitle>Create SMART Goal</DialogTitle>
+                <DialogDescription>
+                  Establish a specific, measurable key target laddered to an objective.
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="grid gap-4 py-4">
+                <div className="space-y-1.5">
+                  <Label>Parent Organization Goal *</Label>
+                  <Select value={parentId} onValueChange={setParentId}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select parent objective" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {orgGoals.map((og) => (
+                        <SelectItem key={og.id} value={og.id}>
+                          {og.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="smart-title">Goal Title *</Label>
+                  <Input
+                    id="smart-title"
+                    placeholder="e.g. Reduce server latency to <200ms"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="smart-owner">Goal Owner *</Label>
+                  <Input
+                    id="smart-owner"
+                    placeholder="e.g. Priya Anand"
+                    value={owner}
+                    onChange={(e) => setOwner(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="smart-start">Start Date</Label>
+                    <Input
+                      id="smart-start"
+                      type="date"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="smart-due">Due Date</Label>
+                    <Input
+                      id="smart-due"
+                      type="date"
+                      value={dueDate}
+                      onChange={(e) => setDueDate(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button variant="outline" type="button" className="cursor-pointer">
+                    Cancel
+                  </Button>
+                </DialogClose>
+                <Button type="submit" className="cursor-pointer">Create SMART Goal</Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {view === "cards" ? (
