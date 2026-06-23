@@ -10,6 +10,7 @@ import {
   BarChart3,
   Settings,
   Sparkles,
+  ChevronRight,
 } from "lucide-react";
 import {
   Sidebar,
@@ -21,24 +22,42 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import { useLanguage } from "@/hooks/use-language";
+import * as React from "react";
 
-const mainNav = [
+interface SidebarItem {
+  title: string;
+  url: string;
+  icon: React.ComponentType<any>;
+  items?: Array<{ title: string; url: string }>;
+}
+
+const mainNav: SidebarItem[] = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
   { title: "Annual Goals", url: "/organization-goals", icon: Target },
   { title: "Smart Goals", url: "/smart-goals", icon: CheckCircle2 },
-  { title: "Action Plans", url: "/action-plans", icon: ListTodo },
-  { title: "Challenges", url: "/challenges", icon: AlertTriangle },
-  { title: "Solutions", url: "/solutions", icon: Lightbulb },
+  { 
+    title: "Action Plans", 
+    url: "/action-plans", 
+    icon: ListTodo,
+    items: [
+      { title: "Challenges", url: "/challenges" },
+      { title: "Solutions", url: "/solutions" },
+    ]
+  },
 ];
 
-const insightNav = [
+const insightNav: SidebarItem[] = [
   { title: "Emotional Tracking", url: "/emotional-tracking", icon: HeartPulse },
   { title: "Reports", url: "/reports", icon: BarChart3 },
 ];
 
-const systemNav = [
+const systemNav: SidebarItem[] = [
   { title: "Settings", url: "/settings", icon: Settings },
 ];
 
@@ -49,23 +68,69 @@ export function AppSidebar() {
   const isActive = (url: string) =>
     url === "/" ? pathname === "/" : pathname === url || pathname.startsWith(url + "/");
 
-  const renderGroup = (label: string, items: typeof mainNav) => (
+  const renderGroup = (label: string, items: SidebarItem[]) => (
     <SidebarGroup>
       <SidebarGroupLabel className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70">
         {label}
       </SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
-          {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={t(item.title)}>
-                <Link to={item.url} className="flex items-center gap-3">
-                  <item.icon className="h-4 w-4 shrink-0" />
-                  <span className="truncate">{t(item.title)}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
+          {items.map((item) => {
+            const hasSubitems = item.items && item.items.length > 0;
+            const isSubitemActive = hasSubitems && item.items?.some(sub => pathname.startsWith(sub.url));
+            const shouldBeOpen = pathname.startsWith(item.url) || isSubitemActive;
+
+            if (hasSubitems) {
+              return (
+                <Collapsible
+                  key={item.title}
+                  asChild
+                  defaultOpen={shouldBeOpen}
+                  className="group/collapsible"
+                >
+                  <SidebarMenuItem>
+                    <div className="flex items-center justify-between w-full">
+                      <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={t(item.title)} className="flex-1">
+                        <Link to={item.url} className="flex items-center gap-3">
+                          <item.icon className="h-4 w-4 shrink-0" />
+                          <span className="truncate">{t(item.title)}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                      <CollapsibleTrigger asChild>
+                        <button className="h-8 w-8 flex items-center justify-center rounded-md hover:bg-sidebar-accent hover:text-sidebar-accent-foreground cursor-pointer mr-1">
+                          <ChevronRight className="h-3.5 w-3.5 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                        </button>
+                      </CollapsibleTrigger>
+                    </div>
+                    <CollapsibleContent>
+                      <SidebarMenuSub>
+                        {item.items?.map((subItem) => (
+                          <SidebarMenuSubItem key={subItem.title}>
+                            <SidebarMenuSubButton asChild isActive={isActive(subItem.url)}>
+                              <Link to={subItem.url}>
+                                <span>{t(subItem.title)}</span>
+                              </Link>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        ))}
+                      </SidebarMenuSub>
+                    </CollapsibleContent>
+                  </SidebarMenuItem>
+                </Collapsible>
+              );
+            }
+
+            return (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={t(item.title)}>
+                  <Link to={item.url} className="flex items-center gap-3">
+                    <item.icon className="h-4 w-4 shrink-0" />
+                    <span className="truncate">{t(item.title)}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            );
+          })}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
