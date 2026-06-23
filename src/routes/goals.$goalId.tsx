@@ -268,7 +268,7 @@ function GoalDetailPage() {
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
         <KpiCard label="Progress" value={`${goal.progress}%`} icon={Target} hint="overall" />
-        <KpiCard label="SMART Goals" value={linkedSmart.length} icon={CheckCircle2} hint="aligned" />
+        <KpiCard label="Smart Goals" value={linkedSmart.length} icon={CheckCircle2} hint="aligned" />
         <KpiCard label="Action Items" value={linkedActions.length} icon={ListTodo} hint="in flight" />
         <KpiCard label="Challenges" value={linkedChallenges.length} icon={AlertTriangle} hint="raised" />
       </div>
@@ -294,7 +294,7 @@ function GoalDetailPage() {
 
           <div className="ml-6 space-y-3 border-l pl-6">
             {linkedSmart.map((s) => (
-              <TreeNode key={s.id} icon={CheckCircle2} color="text-info bg-info/10" label="SMART Goal" title={s.title}
+              <TreeNode key={s.id} icon={CheckCircle2} color="text-info bg-info/10" label="Smart Goal" title={s.title}
                         meta={`${s.progress}% · ${s.owner} · due ${s.dueDate}`} badge={<StatusBadge value={s.status} />}>
                 <div className="ml-6 mt-3 space-y-2 border-l pl-6">
                   {linkedActions.filter((a) => a.smartGoalId === s.id).map((a) => (

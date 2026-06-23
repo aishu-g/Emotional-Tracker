@@ -33,7 +33,7 @@ export const Route = createFileRoute("/organization-goals")({
   head: () => ({
     meta: [
       { title: "Annual Goals (2026-2027) — PB39" },
-      { name: "description", content: "Track every organizational goal, owner and SMART goal completion in one view." },
+      { name: "description", content: "Track every organizational goal, owner and Smart goal completion in one view." },
     ],
   }),
   component: OrganizationGoalsPage,
@@ -411,7 +411,7 @@ function OrganizationGoalsPage() {
                 <div>
                   <p className="text-2xl font-semibold leading-none">{g.computedProgress}%</p>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    {g.smartCompleted} / {g.smartTotal} SMART goals completed
+                    {g.smartCompleted} / {g.smartTotal} Smart goals completed
                   </p>
                 </div>
                 <div className="text-right text-[11px] text-muted-foreground">
@@ -466,7 +466,7 @@ function OrganizationGoalsPage() {
               <TableRow className="hover:bg-transparent">
                 <SortHead label="Goal" k="name" sortKey={sortKey} sortAsc={sortAsc} onClick={toggleSort} />
                 <SortHead label="Owner" k="owner" sortKey={sortKey} sortAsc={sortAsc} onClick={toggleSort} />
-                <TableHead>SMART Goals</TableHead>
+                <TableHead>Smart Goals</TableHead>
                 <SortHead label="Progress" k="progress" sortKey={sortKey} sortAsc={sortAsc} onClick={toggleSort} />
                 <SortHead label="Status" k="status" sortKey={sortKey} sortAsc={sortAsc} onClick={toggleSort} />
                 <TableHead>Start</TableHead>

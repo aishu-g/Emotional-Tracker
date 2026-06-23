@@ -22,7 +22,7 @@ src/
 │
 ├── lib/                 # Core utilities, types, and mock databases
 │   ├── org-goals.ts     # Organization goals data templates
-│   ├── smart-goals.ts   # SMART goals data templates
+│   ├── smart-goals.ts   # Smart goals data templates
 │   ├── action-plans.ts  # Action plans/tasks data templates
 │   ├── challenges.ts    # Challenges/blockers data templates
 │   ├── solutions.ts     # Solutions/ideas data templates

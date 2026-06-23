@@ -143,7 +143,7 @@ function ActionPlansPage() {
   const handleCreateTask = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!taskTitle || !assignee || !actionSmartId) {
-      toast.error("Please fill in required fields and select a parent SMART goal.");
+      toast.error("Please fill in required fields and select a parent Smart goal.");
       return;
     }
     const added = await addActionItem({
@@ -230,7 +230,7 @@ function ActionPlansPage() {
       map.get(ai.smartGoalId)!.push(ai);
     }
     return Array.from(map.entries()).map(([sgId, items]) => ({
-      smartGoal: smartGoals.find((s) => s.id === sgId) || { id: sgId, title: "SMART Goal" },
+      smartGoal: smartGoals.find((s) => s.id === sgId) || { id: sgId, title: "Smart Goal" },
       items,
     }));
   }, [filteredActionItems, smartGoals]);
@@ -592,10 +592,10 @@ function ActionPlansPage() {
         </div>
         <Select value={smartFilter} onValueChange={setSmartFilter}>
           <SelectTrigger className="h-9 w-[240px]">
-            <SelectValue placeholder="All SMART goals" />
+            <SelectValue placeholder="All Smart goals" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All SMART goals</SelectItem>
+            <SelectItem value="all">All Smart goals</SelectItem>
             {smartGoals.map((s) => (
               <SelectItem key={s.id} value={s.id}>{s.title}</SelectItem>
             ))}
@@ -636,16 +636,16 @@ function ActionPlansPage() {
               <DialogHeader>
                 <DialogTitle>Create Action Plan / Task</DialogTitle>
                 <DialogDescription>
-                  Establish a specific, direct task or action plan laddered to a SMART goal.
+                  Establish a specific, direct task or action plan laddered to a Smart goal.
                 </DialogDescription>
               </DialogHeader>
 
               <div className="grid gap-4 py-4">
                 <div className="space-y-1.5">
-                  <Label>Parent SMART Goal *</Label>
+                  <Label>Parent Smart Goal *</Label>
                   <Select value={actionSmartId} onValueChange={setActionSmartId}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select parent SMART goal" />
+                      <SelectValue placeholder="Select parent Smart goal" />
                     </SelectTrigger>
                     <SelectContent>
                       {smartGoals.map((sg) => (
@@ -725,7 +725,7 @@ function ActionPlansPage() {
           {groupedActionItems.map(({ smartGoal, items }) => (
             <section key={smartGoal.id} className="space-y-3">
               <div className="flex items-center gap-2 text-sm">
-                <span className="text-muted-foreground">SMART Goal</span>
+                <span className="text-muted-foreground">Smart Goal</span>
                 <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
                 <span className="font-semibold text-foreground">{smartGoal.title}</span>
                 <span className="ml-2 text-xs text-muted-foreground">{items.length} action plans</span>
@@ -806,7 +806,7 @@ function ActionPlansPage() {
                 <TableHead>Status</TableHead>
                 <TableHead>Progress</TableHead>
                 <TableHead>Due Date</TableHead>
-                <TableHead>SMART Goal</TableHead>
+                <TableHead>Smart Goal</TableHead>
                 <TableHead>Notes / Comment</TableHead>
                 <TableHead className="w-[50px]"></TableHead>
               </TableRow>

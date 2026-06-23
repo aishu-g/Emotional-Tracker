@@ -89,7 +89,7 @@ function Dashboard() {
             g.endDate,
           ]),
           ...smartGoals.map((s) => [
-            "SMART Goal",
+            "Smart Goal",
             s.title,
             s.owner,
             `${s.progress}%`,
@@ -137,7 +137,7 @@ function Dashboard() {
             g.endDate,
           ]),
           ...smartGoals.map((s) => [
-            "SMART Goal",
+            "Smart Goal",
             s.title,
             s.owner,
             `${s.progress}%`,
@@ -193,7 +193,7 @@ function Dashboard() {
 
         const kpiData = [
           ["Annual Goals", String(totalOrgGoals), "Goal Completion", `${goalCompletion}%`],
-          ["SMART Goals", String(totalSmartGoals), "Open Action Items", String(openActionItems)],
+          ["Smart Goals", String(totalSmartGoals), "Open Action Items", String(openActionItems)],
           ["Challenges Raised", String(challengesRaised), "Solutions Implemented", String(solutionsImplemented)],
         ];
 
@@ -286,7 +286,7 @@ function Dashboard() {
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
         <KpiCard label="Annual Goals" value={totalOrgGoals} delta={8} hint="vs last quarter" icon={Target} />
-        <KpiCard label="SMART Goals" value={totalSmartGoals} delta={12} hint="active" icon={CheckCircle2} />
+        <KpiCard label="Smart Goals" value={totalSmartGoals} delta={12} hint="active" icon={CheckCircle2} />
         <KpiCard label="Action Items Open" value={openActionItems} delta={-4} hint="in flight" icon={ListTodo} />
         <KpiCard label="Challenges Raised" value={challengesRaised} delta={3} hint="open blockers" icon={AlertTriangle} />
         <KpiCard label="Solutions Implemented" value={solutionsImplemented} delta={20} hint="QTD" icon={Lightbulb} />

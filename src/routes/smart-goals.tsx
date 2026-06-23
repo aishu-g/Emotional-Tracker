@@ -43,7 +43,7 @@ export const Route = createFileRoute("/smart-goals")({
   validateSearch: (search) => smartGoalsSearchSchema.parse(search),
   head: () => ({
     meta: [
-      { title: "SMART Goals — PB39" },
+      { title: "Smart Goals — PB39" },
       { name: "description", content: "Specific, measurable goals laddered to every organization objective." },
     ],
   }),
@@ -77,7 +77,7 @@ function SmartGoalsPage() {
   // Dialog Open state
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  // New SMART Goal form state
+  // New Smart Goal form state
   const [title, setTitle] = useState("");
   const [owner, setOwner] = useState("");
   const [startDate, setStartDate] = useState("2026-06-01");
@@ -133,7 +133,7 @@ function SmartGoalsPage() {
       orgGoalId: parentId,
     });
 
-    toast.success(`SMART goal "${title}" created successfully!`);
+    toast.success(`Smart goal "${title}" created successfully!`);
     setTitle("");
     setOwner("");
     setDialogOpen(false);
@@ -151,7 +151,7 @@ function SmartGoalsPage() {
   return (
     <div className="space-y-6 p-6 md:p-8">
       <PageHeader
-        title="SMART Goals"
+        title="Smart Goals"
         description="Break down each organization objective into specific, measurable outcomes."
         actions={
           <div className="flex items-center gap-2">
@@ -189,7 +189,7 @@ function SmartGoalsPage() {
         <div className="relative flex-1 max-w-sm">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Search SMART goals…"
+            placeholder="Search Smart goals…"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="h-9 pl-9"
@@ -222,13 +222,13 @@ function SmartGoalsPage() {
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <Button size="sm" className="h-9 cursor-pointer gap-1">
-              <Plus className="mr-1.5 h-3.5 w-3.5" /> New SMART goal
+              <Plus className="mr-1.5 h-3.5 w-3.5" /> New Smart goal
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[480px]">
             <form onSubmit={handleCreate}>
               <DialogHeader>
-                <DialogTitle>Create SMART Goal</DialogTitle>
+                <DialogTitle>Create Smart Goal</DialogTitle>
                 <DialogDescription>
                   Establish a specific, measurable key target laddered to an objective.
                 </DialogDescription>
@@ -301,7 +301,7 @@ function SmartGoalsPage() {
                     Cancel
                   </Button>
                 </DialogClose>
-                <Button type="submit" className="cursor-pointer">Create SMART Goal</Button>
+                <Button type="submit" className="cursor-pointer">Create Smart Goal</Button>
               </DialogFooter>
             </form>
           </DialogContent>
@@ -320,7 +320,7 @@ function SmartGoalsPage() {
                 <Link to="/goals/$goalId" params={{ goalId: org.id }} className="font-medium hover:underline">
                   {org.name}
                 </Link>
-                <span className="ml-2 text-xs text-muted-foreground">{goals.length} SMART goals</span>
+                <span className="ml-2 text-xs text-muted-foreground">{goals.length} Smart goals</span>
               </div>
 
               <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
@@ -384,7 +384,7 @@ function SmartGoalsPage() {
                             onClick={(e) => {
                               e.stopPropagation();
                               deleteSmartGoal(g.id);
-                              toast.success("SMART goal deleted successfully");
+                              toast.success("Smart goal deleted successfully");
                             }}
                             className="inline-flex items-center text-destructive hover:text-destructive hover:bg-destructive/10 p-1 rounded cursor-pointer"
                           >
@@ -400,7 +400,7 @@ function SmartGoalsPage() {
           ))}
           {grouped.length === 0 && (
             <div className="rounded-xl border bg-card p-8 text-center text-sm text-muted-foreground">
-              No SMART goals match the current filters.
+              No Smart goals match the current filters.
             </div>
           )}
         </div>
@@ -409,7 +409,7 @@ function SmartGoalsPage() {
           <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent">
-                <TableHead>SMART Goal</TableHead>
+                <TableHead>Smart Goal</TableHead>
                 <TableHead>Organization Goal</TableHead>
                 <TableHead>Owner</TableHead>
                 <TableHead>Timeline</TableHead>
@@ -481,7 +481,7 @@ function SmartGoalsPage() {
                         className="h-8 w-8 text-destructive hover:bg-destructive/10 hover:text-destructive cursor-pointer"
                         onClick={() => {
                           deleteSmartGoal(g.id);
-                          toast.success("SMART goal deleted successfully");
+                          toast.success("Smart goal deleted successfully");
                         }}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -493,7 +493,7 @@ function SmartGoalsPage() {
               {filtered.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={8} className="h-24 text-center text-muted-foreground">
-                    No SMART goals match the current filters.
+                    No Smart goals match the current filters.
                   </TableCell>
                 </TableRow>
               )}
@@ -523,7 +523,7 @@ function SmartGoalsPage() {
                     className="text-destructive hover:bg-destructive/10 hover:text-destructive border-destructive/20 cursor-pointer gap-1.5 h-8"
                     onClick={() => {
                       deleteSmartGoal(activeGoal.id);
-                      toast.success("SMART goal deleted successfully");
+                      toast.success("Smart goal deleted successfully");
                       setSelectedId(null);
                     }}
                   >

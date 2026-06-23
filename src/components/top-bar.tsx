@@ -89,7 +89,7 @@ export function TopBar() {
   const [orgEnd, setOrgEnd] = useState("2026-12-31");
   const [orgDesc, setOrgDesc] = useState("");
 
-  // SMART Goal Form
+  // Smart Goal Form
   const [smartTitle, setSmartTitle] = useState("");
   const [smartOwner, setSmartOwner] = useState("");
   const [smartStart, setSmartStart] = useState("2026-06-01");
@@ -141,16 +141,16 @@ export function TopBar() {
         orgGoalId: parentId,
       });
       if (added) {
-        toast.success(`SMART goal "${added.title}" created!`);
+        toast.success(`Smart goal "${added.title}" created!`);
       } else {
-        toast.error("Failed to create SMART goal in database.");
+        toast.error("Failed to create Smart goal in database.");
       }
       // Reset
       setSmartTitle("");
       setSmartOwner("");
     } else if (goalType === "action") {
       if (!actionTask || !actionAssignee || !actionSmartId) {
-        toast.error("Please select a parent SMART goal and fill in required fields.");
+        toast.error("Please select a parent Smart goal and fill in required fields.");
         return;
       }
       const added = await addActionItem({

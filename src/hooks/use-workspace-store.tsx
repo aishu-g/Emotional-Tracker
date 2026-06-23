@@ -291,7 +291,7 @@ export const WorkspaceStoreProvider: React.FC<{ children: React.ReactNode }> = (
         setOrgGoals(mapped);
       }
 
-      // SMART goals
+      // Smart goals
       const { data: smartData } = await supabase
         .from("smart_goals")
         .select("*")
@@ -658,10 +658,10 @@ export const WorkspaceStoreProvider: React.FC<{ children: React.ReactNode }> = (
       };
 
       setSmartGoals((prev) => [newGoal, ...prev]);
-      addActivity("goal_update", `Created SMART goal: "${newGoal.title}"`, profile.name);
+      addActivity("goal_update", `Created Smart goal: "${newGoal.title}"`, profile.name);
       return newGoal;
     } catch (err) {
-      console.error("Failed to add SMART goal:", err);
+      console.error("Failed to add Smart goal:", err);
       return null;
     }
   };
@@ -679,9 +679,9 @@ export const WorkspaceStoreProvider: React.FC<{ children: React.ReactNode }> = (
       setSmartGoals((prev) => prev.filter((sg) => sg.id !== id));
       setActionItems((prev) => prev.filter((ai) => ai.smartGoalId !== id));
 
-      addActivity("goal_update", `Deleted SMART goal`, profile.name);
+      addActivity("goal_update", `Deleted Smart goal`, profile.name);
     } catch (err) {
-      console.error("Failed to delete SMART goal:", err);
+      console.error("Failed to delete Smart goal:", err);
     }
   };
 
