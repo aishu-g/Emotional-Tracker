@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TraceabilityRouteImport } from './routes/traceability'
 import { Route as SolutionsRouteImport } from './routes/solutions'
 import { Route as SmartGoalsRouteImport } from './routes/smart-goals'
 import { Route as SettingsRouteImport } from './routes/settings'
@@ -21,11 +20,6 @@ import { Route as ActionPlansRouteImport } from './routes/action-plans'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GoalsGoalIdRouteImport } from './routes/goals.$goalId'
 
-const TraceabilityRoute = TraceabilityRouteImport.update({
-  id: '/traceability',
-  path: '/traceability',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SolutionsRoute = SolutionsRouteImport.update({
   id: '/solutions',
   path: '/solutions',
@@ -87,7 +81,6 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/smart-goals': typeof SmartGoalsRoute
   '/solutions': typeof SolutionsRoute
-  '/traceability': typeof TraceabilityRoute
   '/goals/$goalId': typeof GoalsGoalIdRoute
 }
 export interface FileRoutesByTo {
@@ -100,7 +93,6 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/smart-goals': typeof SmartGoalsRoute
   '/solutions': typeof SolutionsRoute
-  '/traceability': typeof TraceabilityRoute
   '/goals/$goalId': typeof GoalsGoalIdRoute
 }
 export interface FileRoutesById {
@@ -114,7 +106,6 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/smart-goals': typeof SmartGoalsRoute
   '/solutions': typeof SolutionsRoute
-  '/traceability': typeof TraceabilityRoute
   '/goals/$goalId': typeof GoalsGoalIdRoute
 }
 export interface FileRouteTypes {
@@ -129,7 +120,6 @@ export interface FileRouteTypes {
     | '/settings'
     | '/smart-goals'
     | '/solutions'
-    | '/traceability'
     | '/goals/$goalId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -142,7 +132,6 @@ export interface FileRouteTypes {
     | '/settings'
     | '/smart-goals'
     | '/solutions'
-    | '/traceability'
     | '/goals/$goalId'
   id:
     | '__root__'
@@ -155,7 +144,6 @@ export interface FileRouteTypes {
     | '/settings'
     | '/smart-goals'
     | '/solutions'
-    | '/traceability'
     | '/goals/$goalId'
   fileRoutesById: FileRoutesById
 }
@@ -169,19 +157,11 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   SmartGoalsRoute: typeof SmartGoalsRoute
   SolutionsRoute: typeof SolutionsRoute
-  TraceabilityRoute: typeof TraceabilityRoute
   GoalsGoalIdRoute: typeof GoalsGoalIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/traceability': {
-      id: '/traceability'
-      path: '/traceability'
-      fullPath: '/traceability'
-      preLoaderRoute: typeof TraceabilityRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/solutions': {
       id: '/solutions'
       path: '/solutions'
@@ -265,7 +245,6 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   SmartGoalsRoute: SmartGoalsRoute,
   SolutionsRoute: SolutionsRoute,
-  TraceabilityRoute: TraceabilityRoute,
   GoalsGoalIdRoute: GoalsGoalIdRoute,
 }
 export const routeTree = rootRouteImport

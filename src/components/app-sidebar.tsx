@@ -10,7 +10,6 @@ import {
   BarChart3,
   Settings,
   Sparkles,
-  GitBranch,
 } from "lucide-react";
 import {
   Sidebar,
@@ -29,7 +28,6 @@ const mainNav = [
   { title: "Organization Goals", url: "/organization-goals", icon: Target },
   { title: "SMART Goals", url: "/smart-goals", icon: CheckCircle2 },
   { title: "Action Plans", url: "/action-plans", icon: ListTodo },
-  { title: "Traceability", url: "/traceability", icon: GitBranch },
   { title: "Challenges", url: "/challenges", icon: AlertTriangle },
   { title: "Solutions", url: "/solutions", icon: Lightbulb },
 ];
