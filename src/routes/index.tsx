@@ -11,6 +11,7 @@ import {
 } from "@/lib/mock-data";
 import { Button } from "@/components/ui/button";
 import { useWorkspaceStore } from "@/hooks/use-workspace-store";
+import { useLanguage } from "@/hooks/use-language";
 import { toast } from "sonner";
 import {
   DropdownMenu,
@@ -35,6 +36,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Dashboard() {
+  const { t } = useLanguage();
   const {
     orgGoals,
     smartGoals,
@@ -58,10 +60,10 @@ function Dashboard() {
     : 0;
 
   const goalStatusOverview = [
-    { name: "Completed", count: orgGoals.filter((g) => g.status === "Completed").length },
-    { name: "In Progress", count: orgGoals.filter((g) => g.status === "In Progress").length },
-    { name: "At Risk", count: orgGoals.filter((g) => g.status === "At Risk").length },
-    { name: "Not Started", count: orgGoals.filter((g) => g.status === "Not Started").length },
+    { name: t("Completed"), count: orgGoals.filter((g) => g.status === "Completed").length },
+    { name: t("In Progress"), count: orgGoals.filter((g) => g.status === "In Progress").length },
+    { name: t("At Risk"), count: orgGoals.filter((g) => g.status === "At Risk").length },
+    { name: t("Not Started"), count: orgGoals.filter((g) => g.status === "Not Started").length },
   ];
 
   const departmentProgress = departments.map((dept) => {
@@ -245,8 +247,8 @@ function Dashboard() {
   return (
     <div className="space-y-6 p-6 md:p-8">
       <PageHeader
-        title="Executive Dashboard"
-        description="Real-time visibility into goals, execution and risks across your organization."
+        title={t("Executive Dashboard")}
+        description={t("Real-time visibility into goals, execution and risks across your organization.")}
         actions={
           <div className="flex items-center gap-2">
             <DropdownMenu>
@@ -266,16 +268,16 @@ function Dashboard() {
             {/* Dropdown Menu for Export formats */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button size="sm" className="cursor-pointer">Export report</Button>
+                <Button size="sm" className="cursor-pointer">{t("Export report")}</Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem onClick={() => handleExport("csv")} className="cursor-pointer">
+                <DropdownMenuItem onClick={() => handleExport("csv")} className="cursor-pointer text-xs">
                   Export as CSV
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleExport("excel")} className="cursor-pointer">
+                <DropdownMenuItem onClick={() => handleExport("excel")} className="cursor-pointer text-xs">
                   Export as Excel (.xlsx)
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleExport("pdf")} className="cursor-pointer">
+                <DropdownMenuItem onClick={() => handleExport("pdf")} className="cursor-pointer text-xs">
                   Export as PDF (.pdf)
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -285,29 +287,29 @@ function Dashboard() {
       />
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
-        <KpiCard label="Annual Goals" value={totalOrgGoals} delta={8} hint="vs last quarter" icon={Target} />
-        <KpiCard label="Smart Goals" value={totalSmartGoals} delta={12} hint="active" icon={CheckCircle2} />
-        <KpiCard label="Action Items Open" value={openActionItems} delta={-4} hint="in flight" icon={ListTodo} />
-        <KpiCard label="Challenges Raised" value={challengesRaised} delta={3} hint="open blockers" icon={AlertTriangle} />
-        <KpiCard label="Solutions Implemented" value={solutionsImplemented} delta={20} hint="QTD" icon={Lightbulb} />
-        <KpiCard label="Goal Completion" value={`${goalCompletion}%`} delta={6} hint="org-wide" icon={TrendingUp} />
+        <KpiCard label={t("Annual Goals")} value={totalOrgGoals} delta={8} hint={t("vs last quarter")} icon={Target} />
+        <KpiCard label={t("Smart Goals")} value={totalSmartGoals} delta={12} hint={t("active")} icon={CheckCircle2} />
+        <KpiCard label={t("Action Items Open")} value={openActionItems} delta={-4} hint={t("in flight")} icon={ListTodo} />
+        <KpiCard label={t("Challenges Raised")} value={challengesRaised} delta={3} hint={t("open blockers")} icon={AlertTriangle} />
+        <KpiCard label={t("Solutions Implemented")} value={solutionsImplemented} delta={20} hint={t("QTD")} icon={Lightbulb} />
+        <KpiCard label={t("Goal Completion")} value={`${goalCompletion}%`} delta={6} hint={t("org-wide")} icon={TrendingUp} />
       </div>
 
       <div className="grid gap-5 xl:grid-cols-3">
-        <SectionCard title="Goal Progress Overview" description="Distribution by status across the organization" className="xl:col-span-2">
+        <SectionCard title={t("Goal Progress Overview")} description={t("Distribution by status across the organization")} className="xl:col-span-2">
           <BarSeriesChart
             data={goalStatusOverview}
             xKey="name"
             series={[{ key: "count", label: "Goals", color: "var(--color-chart-1)" }]}
           />
         </SectionCard>
-        <SectionCard title="Recent Activity" description="Latest updates from your teams">
+        <SectionCard title={t("Recent Activity")} description={t("Latest updates from your teams")}>
           <ActivityFeed items={activities.slice(0, 6)} />
         </SectionCard>
       </div>
 
       <div className="grid gap-5 lg:grid-cols-2">
-        <SectionCard title="Department Goal Progress" description="Average completion by department">
+        <SectionCard title={t("Department Goal Progress")} description={t("Average completion by department")}>
           <BarSeriesChart
             data={departmentProgress}
             xKey="department"
@@ -316,7 +318,7 @@ function Dashboard() {
             series={[{ key: "progress", label: "Progress %", color: "var(--color-chart-1)" }]}
           />
         </SectionCard>
-        <SectionCard title="Monthly Goal Achievement" description="Achieved vs target across the year">
+        <SectionCard title={t("Monthly Goal Achievement")} description={t("Achieved vs target across the year")}>
           <AreaTrendChart
             data={monthlyTrend}
             xKey="month"
@@ -328,7 +330,7 @@ function Dashboard() {
         </SectionCard>
       </div>
 
-      <SectionCard title="Challenges vs Solutions" description="Are we solving issues faster than they appear?">
+      <SectionCard title={t("Challenges vs Solutions")} description={t("Are we solving issues faster than they appear?")}>
         <LineSeriesChart
           data={challengeVsSolution}
           xKey="month"

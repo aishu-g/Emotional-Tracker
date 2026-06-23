@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/use-language";
 
 type Variant =
   | "success"
@@ -47,6 +48,7 @@ const mapping: Record<string, Variant> = {
 };
 
 export function StatusBadge({ value, className }: { value: string; className?: string }) {
+  const { t } = useLanguage();
   const variant = mapping[value] ?? "muted";
   return (
     <span
@@ -57,7 +59,7 @@ export function StatusBadge({ value, className }: { value: string; className?: s
       )}
     >
       <span className={cn("h-1.5 w-1.5 rounded-full bg-current opacity-80")} />
-      {value}
+      {t(value)}
     </span>
   );
 }

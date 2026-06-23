@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bell, Search, Plus, Sparkles, Check, CheckCircle2, Target, ListTodo, AlertTriangle, Lightbulb, ChevronLeft } from "lucide-react";
+import { Bell, Search, Plus, Sparkles, Check, CheckCircle2, Target, ListTodo, AlertTriangle, Lightbulb, ChevronLeft, Globe } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -7,6 +7,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { useNavigate, useLocation, useRouter } from "@tanstack/react-router";
 import { useWorkspaceStore } from "@/hooks/use-workspace-store";
+import { useLanguage } from "@/hooks/use-language";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 
@@ -56,6 +57,7 @@ export function TopBar() {
   const navigate = useNavigate();
   const location = useLocation();
   const router = useRouter();
+  const { language, setLanguage, t } = useLanguage();
 
   const handleBack = () => {
     if (window.history.length > 1) {
@@ -215,12 +217,24 @@ export function TopBar() {
       <div className="relative hidden flex-1 max-w-md md:block">
         <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
-          placeholder="Search goals, challenges, people…"
+          placeholder={t("Search goals, challenges, people…")}
           className="h-9 pl-9 bg-muted/40 border-transparent focus-visible:bg-background"
         />
       </div>
 
       <div className="ml-auto flex items-center gap-2">
+        {/* Language Selector Dropdown */}
+        <Select value={language} onValueChange={(val) => setLanguage(val as any)}>
+          <SelectTrigger className="h-9 w-[115px] bg-muted/40 border-transparent hover:bg-muted/60 focus:ring-0 gap-2 cursor-pointer text-xs font-medium">
+            <Globe className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="en" className="cursor-pointer text-xs">English</SelectItem>
+            <SelectItem value="ta" className="cursor-pointer text-xs">தமிழ் (Tamil)</SelectItem>
+          </SelectContent>
+        </Select>
+
         {/* Notifications Popover */}
         <Popover>
           <PopoverTrigger asChild>
@@ -233,14 +247,14 @@ export function TopBar() {
           </PopoverTrigger>
           <PopoverContent className="w-80 p-0" align="end">
             <div className="border-b px-4 py-3 flex items-center justify-between">
-              <h3 className="font-semibold text-sm">Notifications</h3>
+              <h3 className="font-semibold text-sm">{t("Notifications")}</h3>
               <Button
                 variant="ghost"
                 size="sm"
                 className="h-auto p-0 text-xs text-primary hover:bg-transparent hover:text-primary/80"
                 onClick={() => toast.success("All notifications caught up!")}
               >
-                Clear all
+                {t("Clear all")}
               </Button>
             </div>
             <ScrollArea className="h-80">
@@ -261,7 +275,7 @@ export function TopBar() {
                   </div>
                 ))}
                 {activities.length === 0 && (
-                  <p className="text-xs text-muted-foreground text-center py-10">No notifications available.</p>
+                  <p className="text-xs text-muted-foreground text-center py-10">{t("No notifications available.")}</p>
                 )}
               </div>
             </ScrollArea>
@@ -288,17 +302,17 @@ export function TopBar() {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => navigate({ to: "/settings" })} className="cursor-pointer">
-              Settings & Profile
+            <DropdownMenuItem onClick={() => navigate({ to: "/settings" })} className="cursor-pointer text-xs">
+              {t("Settings & Profile")}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => {
                 resetStore();
                 toast.success("Workspace reset to default mock data successfully!");
               }}
-              className="cursor-pointer text-warning hover:text-warning"
+              className="cursor-pointer text-warning hover:text-warning text-xs"
             >
-              Reset to Defaults
+              {t("Reset to Defaults")}
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
@@ -311,9 +325,9 @@ export function TopBar() {
                   navigate({ to: "/" });
                 }
               }}
-              className="cursor-pointer text-destructive"
+              className="cursor-pointer text-destructive text-xs"
             >
-              Log out
+              {t("Log out")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

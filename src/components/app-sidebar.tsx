@@ -22,6 +22,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { useLanguage } from "@/hooks/use-language";
 
 const mainNav = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
@@ -43,6 +44,8 @@ const systemNav = [
 
 export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { t } = useLanguage();
+  
   const isActive = (url: string) =>
     url === "/" ? pathname === "/" : pathname === url || pathname.startsWith(url + "/");
 
@@ -55,10 +58,10 @@ export function AppSidebar() {
         <SidebarMenu>
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={item.title}>
+              <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={t(item.title)}>
                 <Link to={item.url} className="flex items-center gap-3">
                   <item.icon className="h-4 w-4 shrink-0" />
-                  <span className="truncate">{item.title}</span>
+                  <span className="truncate">{t(item.title)}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -77,14 +80,14 @@ export function AppSidebar() {
           </div>
           <div className="flex flex-col leading-tight group-data-[collapsible=icon]:hidden">
             <span className="text-sm font-semibold tracking-tight">PB39</span>
-            <span className="text-[11px] text-muted-foreground">Personal Board</span>
+            <span className="text-[11px] text-muted-foreground">{t("Personal Board")}</span>
           </div>
         </div>
       </SidebarHeader>
       <SidebarContent>
-        {renderGroup("Workspace", mainNav)}
-        {renderGroup("Insights", insightNav)}
-        {renderGroup("System", systemNav)}
+        {renderGroup(t("WORKSPACE"), mainNav)}
+        {renderGroup(t("INSIGHTS"), insightNav)}
+        {renderGroup(t("SYSTEM"), systemNav)}
       </SidebarContent>
     </Sidebar>
   );

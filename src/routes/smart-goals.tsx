@@ -18,6 +18,7 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { useWorkspaceStore } from "@/hooks/use-workspace-store";
+import { useLanguage } from "@/hooks/use-language";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
@@ -57,6 +58,7 @@ function initials(name: string) {
 function SmartGoalsPage() {
   const { orgGoalId } = Route.useSearch();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const {
     orgGoals,
     smartGoals,
@@ -151,8 +153,8 @@ function SmartGoalsPage() {
   return (
     <div className="space-y-6 p-6 md:p-8">
       <PageHeader
-        title="Smart Goals"
-        description="Break down each organization objective into specific, measurable outcomes."
+        title={t("Smart Goals")}
+        description={t("Break down each organization objective into specific, measurable outcomes.")}
         actions={
           <div className="flex items-center gap-2">
             <div className="inline-flex rounded-md border bg-card p-0.5">
@@ -166,7 +168,7 @@ function SmartGoalsPage() {
                     : "text-muted-foreground hover:text-foreground",
                 )}
               >
-                <LayoutGrid className="h-3.5 w-3.5" /> Cards
+                <LayoutGrid className="h-3.5 w-3.5" /> {t("Cards")}
               </button>
               <button
                 type="button"
@@ -178,7 +180,7 @@ function SmartGoalsPage() {
                     : "text-muted-foreground hover:text-foreground",
                 )}
               >
-                <List className="h-3.5 w-3.5" /> Table
+                <List className="h-3.5 w-3.5" /> {t("Table")}
               </button>
             </div>
           </div>
@@ -189,7 +191,7 @@ function SmartGoalsPage() {
         <div className="relative flex-1 max-w-sm">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Search Smart goals…"
+            placeholder={t("Search Smart goals...")}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="h-9 pl-9"
@@ -200,7 +202,7 @@ function SmartGoalsPage() {
             <SelectValue placeholder="All annual goals" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All annual goals</SelectItem>
+            <SelectItem value="all">{t("All annual goals")}</SelectItem>
             {orgGoals.map((o) => (
               <SelectItem key={o.id} value={o.id}>{o.name}</SelectItem>
             ))}
@@ -211,24 +213,24 @@ function SmartGoalsPage() {
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All statuses</SelectItem>
-            <SelectItem value="Not Started">Not Started</SelectItem>
-            <SelectItem value="In Progress">In Progress</SelectItem>
-            <SelectItem value="At Risk">At Risk</SelectItem>
-            <SelectItem value="Completed">Completed</SelectItem>
+            <SelectItem value="all">{t("All statuses")}</SelectItem>
+            <SelectItem value="Not Started">{t("Not Started")}</SelectItem>
+            <SelectItem value="In Progress">{t("In Progress")}</SelectItem>
+            <SelectItem value="At Risk">{t("At Risk")}</SelectItem>
+            <SelectItem value="Completed">{t("Completed")}</SelectItem>
           </SelectContent>
         </Select>
 
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <Button size="sm" className="h-9 cursor-pointer gap-1">
-              <Plus className="mr-1.5 h-3.5 w-3.5" /> New Smart goal
+              <Plus className="mr-1.5 h-3.5 w-3.5" /> {t("New Smart goal")}
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[480px]">
             <form onSubmit={handleCreate}>
               <DialogHeader>
-                <DialogTitle>Create Smart Goal</DialogTitle>
+                <DialogTitle>{t("Create Smart Goal")}</DialogTitle>
                 <DialogDescription>
                   Establish a specific, measurable key target laddered to an objective.
                 </DialogDescription>

@@ -13,6 +13,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { useWorkspaceStore } from "@/hooks/use-workspace-store";
+import { useLanguage } from "@/hooks/use-language";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -43,6 +44,7 @@ type SortKey = "name" | "owner" | "progress" | "status" | "endDate";
 
 function OrganizationGoalsPage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { orgGoals, smartGoals, addOrgGoal, orgGoalStatuses, deleteOrgGoal, updateOrgGoal, profile, members, departments } = useWorkspaceStore();
 
   const [view, setView] = useState<"cards" | "table">("cards");
@@ -185,7 +187,7 @@ function OrganizationGoalsPage() {
   return (
     <div className="space-y-6 p-6 md:p-8">
       <PageHeader
-        title="Annual Goals (2026-2027)"
+        title={t("Annual Goals") + " (2026-2027)"}
         description="This goal can be founder goal for an organization for period of one year."
         actions={
           <div className="flex items-center gap-2">
@@ -195,14 +197,14 @@ function OrganizationGoalsPage() {
                 onClick={() => setView("cards")}
                 className={cn("inline-flex items-center gap-1.5 rounded px-2.5 py-1 text-xs font-medium cursor-pointer", view === "cards" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground")}
               >
-                <LayoutGrid className="h-3.5 w-3.5" /> Cards
+                <LayoutGrid className="h-3.5 w-3.5" /> {t("Cards")}
               </button>
               <button
                 type="button"
                 onClick={() => setView("table")}
                 className={cn("inline-flex items-center gap-1.5 rounded px-2.5 py-1 text-xs font-medium cursor-pointer", view === "table" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground")}
               >
-                <List className="h-3.5 w-3.5" /> Table
+                <List className="h-3.5 w-3.5" /> {t("Table")}
               </button>
             </div>
           </div>
@@ -239,9 +241,9 @@ function OrganizationGoalsPage() {
             <SelectValue placeholder="Filter status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All statuses</SelectItem>
+            <SelectItem value="all">{t("All statuses")}</SelectItem>
             {orgGoalStatuses.map((st) => (
-              <SelectItem key={st} value={st}>{st}</SelectItem>
+              <SelectItem key={st} value={st}>{t(st)}</SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -250,7 +252,7 @@ function OrganizationGoalsPage() {
           <DialogTrigger asChild>
             <Button size="sm" className="h-9 cursor-pointer gap-1">
               <Plus className="h-3.5 w-3.5" />
-              New Annual goal
+              {t("New Annual goal")}
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[480px]">

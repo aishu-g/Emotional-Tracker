@@ -15,6 +15,7 @@ import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { TopBar } from "@/components/top-bar";
 import { WorkspaceStoreProvider } from "@/hooks/use-workspace-store";
+import { LanguageProvider } from "@/hooks/use-language";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthGate } from "@/components/auth-gate";
 
@@ -127,18 +128,20 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <WorkspaceStoreProvider>
-        <AuthGate>
-          <SidebarProvider>
-            <AppSidebar />
-            <SidebarInset>
-              <TopBar />
-              <main className="min-h-[calc(100vh-3.5rem)] bg-background">
-                <Outlet />
-              </main>
-            </SidebarInset>
-          </SidebarProvider>
-        </AuthGate>
-        <Toaster position="top-right" closeButton richColors />
+        <LanguageProvider>
+          <AuthGate>
+            <SidebarProvider>
+              <AppSidebar />
+              <SidebarInset>
+                <TopBar />
+                <main className="min-h-[calc(100vh-3.5rem)] bg-background">
+                  <Outlet />
+                </main>
+              </SidebarInset>
+            </SidebarProvider>
+          </AuthGate>
+          <Toaster position="top-right" closeButton richColors />
+        </LanguageProvider>
       </WorkspaceStoreProvider>
     </QueryClientProvider>
   );

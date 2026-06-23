@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { useWorkspaceStore } from "@/hooks/use-workspace-store";
+import { useLanguage } from "@/hooks/use-language";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -118,6 +119,7 @@ function initialsOf(name: string | undefined | null) {
 
 function ActionPlansPage() {
   const { smartGoalId } = Route.useSearch();
+  const { t } = useLanguage();
   const [view, setView] = useState<"cards" | "table">("cards");
 
   const {
@@ -493,7 +495,7 @@ function ActionPlansPage() {
   return (
     <div className="space-y-6 p-6 md:p-8">
       <PageHeader
-        title="Action Plans"
+        title={t("Action Plans")}
         description="Executive collaboration workspace — manage tasks, review challenges, weigh director input, and align on recommended paths."
         actions={
           <div className="flex items-center gap-2">
@@ -508,7 +510,7 @@ function ActionPlansPage() {
                     : "text-muted-foreground hover:text-foreground",
                 )}
               >
-                <LayoutGrid className="h-3.5 w-3.5" /> Cards
+                <LayoutGrid className="h-3.5 w-3.5" /> {t("Cards")}
               </button>
               <button
                 type="button"
@@ -520,7 +522,7 @@ function ActionPlansPage() {
                     : "text-muted-foreground hover:text-foreground",
                 )}
               >
-                <List className="h-3.5 w-3.5" /> Table
+                <List className="h-3.5 w-3.5" /> {t("Table")}
               </button>
             </div>
             
@@ -541,7 +543,7 @@ function ActionPlansPage() {
                   
                   <div className="grid gap-4 py-4">
                     <div className="space-y-1.5">
-                      <Label htmlFor="invite-email">Email Address</Label>
+                      <Label htmlFor="invite-email">{t("Email Address")}</Label>
                       <Input
                         id="invite-email"
                         type="email"
@@ -568,7 +570,7 @@ function ActionPlansPage() {
                   
                   <DialogFooter>
                     <DialogClose asChild>
-                      <Button variant="outline" type="button" className="cursor-pointer">Cancel</Button>
+                      <Button variant="outline" type="button" className="cursor-pointer">{t("Cancel")}</Button>
                     </DialogClose>
                     <Button type="submit" className="cursor-pointer">Send Invitation</Button>
                   </DialogFooter>
@@ -584,7 +586,7 @@ function ActionPlansPage() {
         <div className="relative flex-1 max-w-sm">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Search action plans…"
+            placeholder={t("Search action plans...")}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="h-9 pl-9"
@@ -595,7 +597,7 @@ function ActionPlansPage() {
             <SelectValue placeholder="All Smart goals" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Smart goals</SelectItem>
+            <SelectItem value="all">{t("All Smart goals")}</SelectItem>
             {smartGoals.map((s) => (
               <SelectItem key={s.id} value={s.id}>{s.title}</SelectItem>
             ))}
@@ -606,11 +608,11 @@ function ActionPlansPage() {
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All statuses</SelectItem>
-            <SelectItem value="Todo">Todo</SelectItem>
-            <SelectItem value="Doing">Doing</SelectItem>
-            <SelectItem value="Blocked">Blocked</SelectItem>
-            <SelectItem value="Done">Done</SelectItem>
+            <SelectItem value="all">{t("All statuses")}</SelectItem>
+            <SelectItem value="Todo">{t("Todo")}</SelectItem>
+            <SelectItem value="Doing">{t("Doing")}</SelectItem>
+            <SelectItem value="Blocked">{t("Blocked")}</SelectItem>
+            <SelectItem value="Done">{t("Done")}</SelectItem>
           </SelectContent>
         </Select>
 
@@ -628,13 +630,13 @@ function ActionPlansPage() {
         }}>
           <DialogTrigger asChild>
             <Button size="sm" className="h-9 cursor-pointer gap-1">
-              <Plus className="mr-1.5 h-3.5 w-3.5" /> New action plan
+              <Plus className="mr-1.5 h-3.5 w-3.5" /> {t("New action plan")}
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[480px]">
             <form onSubmit={handleCreateTask}>
               <DialogHeader>
-                <DialogTitle>Create Action Plan / Task</DialogTitle>
+                <DialogTitle>{t("Create Action Plan / Task")}</DialogTitle>
                 <DialogDescription>
                   Establish a specific, direct task or action plan laddered to a Smart goal.
                 </DialogDescription>
