@@ -43,7 +43,7 @@ export const Route = createFileRoute("/smart-goals")({
   validateSearch: (search) => smartGoalsSearchSchema.parse(search),
   head: () => ({
     meta: [
-      { title: "SMART Goals — Northstar" },
+      { title: "SMART Goals — PB39" },
       { name: "description", content: "Specific, measurable goals laddered to every organization objective." },
     ],
   }),

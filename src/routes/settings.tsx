@@ -15,7 +15,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/settings")({
   head: () => ({
     meta: [
-      { title: "Settings — Northstar" },
+      { title: "Settings — PB39" },
       { name: "description", content: "Configure your workspace, profile and notification preferences." },
     ],
   }),
@@ -194,7 +194,7 @@ function SettingsPage() {
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-1.5">
                 <Label>Workspace name</Label>
-                <Input defaultValue="Northstar HQ" />
+                <Input defaultValue="PB39 HQ" />
               </div>
               <div className="space-y-1.5">
                 <Label>Default fiscal year start</Label>
@@ -206,7 +206,7 @@ function SettingsPage() {
               </div>
               <div className="space-y-1.5">
                 <Label>Workspace URL</Label>
-                <Input defaultValue="northstar.app/hq" />
+                <Input defaultValue="pb39.app/hq" />
               </div>
             </div>
             <div className="mt-6 flex justify-end">

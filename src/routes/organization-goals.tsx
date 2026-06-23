@@ -32,7 +32,7 @@ import { Textarea } from "@/components/ui/textarea";
 export const Route = createFileRoute("/organization-goals")({
   head: () => ({
     meta: [
-      { title: "Organization Goals — Northstar" },
+      { title: "Organization Goals — PB39" },
       { name: "description", content: "Track every organizational goal, owner and SMART goal completion in one view." },
     ],
   }),

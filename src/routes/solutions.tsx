@@ -32,7 +32,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 export const Route = createFileRoute("/solutions")({
   head: () => ({
     meta: [
-      { title: "Solutions — Northstar" },
+      { title: "Solutions — PB39" },
       { name: "description", content: "Library of proposed and implemented solutions across your organization." },
     ],
   }),

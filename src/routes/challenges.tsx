@@ -32,7 +32,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 export const Route = createFileRoute("/challenges")({
   head: () => ({
     meta: [
-      { title: "Challenges — Northstar" },
+      { title: "Challenges — PB39" },
       { name: "description", content: "Surface blockers, assign owners and track resolution across your goals." },
     ],
   }),

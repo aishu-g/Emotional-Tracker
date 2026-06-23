@@ -31,7 +31,7 @@ import { Textarea } from "@/components/ui/textarea";
 export const Route = createFileRoute("/goals/$goalId")({
   head: ({ params }) => ({
     meta: [
-      { title: `Goal Detail — Northstar` },
+      { title: `Goal Detail — PB39` },
       { name: "description", content: `Details, hierarchy and timeline for goal ${params.goalId}.` },
     ],
   }),

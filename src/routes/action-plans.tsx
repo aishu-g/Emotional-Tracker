@@ -56,7 +56,7 @@ export const Route = createFileRoute("/action-plans")({
   validateSearch: (search) => actionPlansSearchSchema.parse(search),
   head: () => ({
     meta: [
-      { title: "Action Plans — Northstar" },
+      { title: "Action Plans — PB39" },
       {
         name: "description",
         content:
