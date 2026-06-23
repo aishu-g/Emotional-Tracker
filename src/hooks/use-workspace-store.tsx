@@ -94,7 +94,7 @@ export const WorkspaceStoreProvider: React.FC<{ children: React.ReactNode }> = (
   // Non-database persistent UI states (stored locally)
   const [activities, setActivities] = useState<Activity[]>(defaultActivities);
   const [reports, setReports] = useState<Report[]>(defaultReports);
-  const [timeframe, setTimeframe] = useState<string>("This quarter");
+  const [timeframe, setTimeframe] = useState<string>("2026-2027");
   const [orgGoalStatuses, setOrgGoalStatuses] = useState<string[]>(defaultStatuses);
   const [departments, setDepartments] = useState<string[]>(["Revenue", "Customer Success", "Product", "Security", "People", "Partnerships"]);
 

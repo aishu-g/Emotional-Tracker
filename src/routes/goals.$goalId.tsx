@@ -126,7 +126,7 @@ function GoalDetailPage() {
     <div className="space-y-6 p-6 md:p-8">
       <nav className="flex items-center gap-1.5 text-xs text-muted-foreground">
         <Link to="/organization-goals" className="inline-flex items-center gap-1 hover:text-foreground">
-          <ArrowLeft className="h-3 w-3" /> Organization Goals
+          <ArrowLeft className="h-3 w-3" /> Annual Goals
         </Link>
         <ChevronRight className="h-3 w-3" />
         <span className="text-foreground">{goal.id.toUpperCase()}</span>

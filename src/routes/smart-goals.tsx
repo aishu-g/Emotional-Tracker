@@ -285,10 +285,10 @@ function SmartGoalsPage() {
         </div>
         <Select value={orgFilter} onValueChange={setOrgFilter}>
           <SelectTrigger className="h-9 w-[240px]">
-            <SelectValue placeholder="All organization goals" />
+            <SelectValue placeholder="All annual goals" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All organization goals</SelectItem>
+            <SelectItem value="all">All annual goals</SelectItem>
             {orgGoals.map((o) => (
               <SelectItem key={o.id} value={o.id}>{o.name}</SelectItem>
             ))}
@@ -314,7 +314,7 @@ function SmartGoalsPage() {
             <section key={org.id} className="space-y-3">
               <div className="flex items-center gap-2 text-sm">
                 <Link to="/organization-goals" className="text-muted-foreground hover:text-foreground">
-                  Organization Goals
+                  Annual Goals
                 </Link>
                 <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
                 <Link to="/goals/$goalId" params={{ goalId: org.id }} className="font-medium hover:underline">
@@ -509,7 +509,7 @@ function SmartGoalsPage() {
             <>
               <SheetHeader className="p-0">
                 <div className="mb-2 flex items-center gap-2 text-xs text-muted-foreground">
-                  <Link to="/organization-goals" className="hover:text-foreground">Organization Goals</Link>
+                  <Link to="/organization-goals" className="hover:text-foreground">Annual Goals</Link>
                   <ChevronRight className="h-3 w-3" />
                   <span className="truncate">
                     {orgGoals.find((o) => o.id === activeGoal.orgGoalId)?.name || "Strategic Objective"}

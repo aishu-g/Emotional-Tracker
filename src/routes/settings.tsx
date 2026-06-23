@@ -218,7 +218,7 @@ function SettingsPage() {
         </TabsContent>
 
         <TabsContent value="statuses" className="mt-4">
-          <SectionCard title="Goal Status Management" description="Customize status values and stages for Organization Goals.">
+          <SectionCard title="Goal Status Management" description="Customize status values and stages for Annual Goals.">
             <div className="space-y-4">
               <form onSubmit={handleAddStatus} className="flex gap-2">
                 <Input

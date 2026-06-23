@@ -25,7 +25,7 @@ import {
 
 const mainNav = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
-  { title: "Organization Goals", url: "/organization-goals", icon: Target },
+  { title: "Annual Goals", url: "/organization-goals", icon: Target },
   { title: "SMART Goals", url: "/smart-goals", icon: CheckCircle2 },
   { title: "Action Plans", url: "/action-plans", icon: ListTodo },
   { title: "Challenges", url: "/challenges", icon: AlertTriangle },

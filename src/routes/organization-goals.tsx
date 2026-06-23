@@ -32,7 +32,7 @@ import { Textarea } from "@/components/ui/textarea";
 export const Route = createFileRoute("/organization-goals")({
   head: () => ({
     meta: [
-      { title: "Organization Goals — PB39" },
+      { title: "Annual Goals (2026-2027) — PB39" },
       { name: "description", content: "Track every organizational goal, owner and SMART goal completion in one view." },
     ],
   }),
@@ -185,8 +185,8 @@ function OrganizationGoalsPage() {
   return (
     <div className="space-y-6 p-6 md:p-8">
       <PageHeader
-        title="Organization Goals"
-        description="The strategic objectives driving your company forward this year."
+        title="Annual Goals (2026-2027)"
+        description="This goal can be founder goal for an organization for period of one year."
         actions={
           <div className="flex items-center gap-2">
             <div className="inline-flex rounded-md border bg-card p-0.5">

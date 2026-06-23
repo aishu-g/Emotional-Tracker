@@ -80,7 +80,7 @@ function Dashboard() {
         const headers = ["Type", "Name/Title", "Owner", "Progress", "Status", "Start Date", "End/Due Date"];
         const rows = [
           ...orgGoals.map((g) => [
-            "Organization Goal",
+            "Annual Goal",
             g.name,
             g.owner,
             `${g.progress}%`,
@@ -128,7 +128,7 @@ function Dashboard() {
         const headers = ["Type", "Name/Title", "Owner", "Progress", "Status", "Start Date", "End/Due Date"];
         const rows = [
           ...orgGoals.map((g) => [
-            "Organization Goal",
+            "Annual Goal",
             g.name,
             g.owner,
             `${g.progress}%`,
@@ -192,7 +192,7 @@ function Dashboard() {
         doc.text("SUMMARY METRICS", 14, 42);
 
         const kpiData = [
-          ["Organization Goals", String(totalOrgGoals), "Goal Completion", `${goalCompletion}%`],
+          ["Annual Goals", String(totalOrgGoals), "Goal Completion", `${goalCompletion}%`],
           ["SMART Goals", String(totalSmartGoals), "Open Action Items", String(openActionItems)],
           ["Challenges Raised", String(challengesRaised), "Solutions Implemented", String(solutionsImplemented)],
         ];
@@ -207,10 +207,10 @@ function Dashboard() {
           margin: { left: 14, right: 14 },
         });
 
-        // Organization Goals Details table
+        // Annual Goals Details table
         doc.setFont("helvetica", "bold");
         doc.setFontSize(11);
-        doc.text("ORGANIZATION GOALS & PROGRESS", 14, (doc as any).lastAutoTable.finalY + 12);
+        doc.text("ANNUAL GOALS & PROGRESS", 14, (doc as any).lastAutoTable.finalY + 12);
 
         const tableHeaders = ["Goal Name", "Department", "Owner", "Progress", "Status"];
         const tableRows = orgGoals.map((g) => [
@@ -256,9 +256,10 @@ function Dashboard() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => { setTimeframe("This quarter"); toast.info("Filter applied: This quarter"); }} className="cursor-pointer">This quarter</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => { setTimeframe("This year"); toast.info("Filter applied: This year"); }} className="cursor-pointer">This year</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => { setTimeframe("Last 12 months"); toast.info("Filter applied: Last 12 months"); }} className="cursor-pointer">Last 12 months</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => { setTimeframe("2026-2027"); toast.info("Filter applied: 2026-2027"); }} className="cursor-pointer">2026-2027</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => { setTimeframe("2027-2028"); toast.info("Filter applied: 2027-2028"); }} className="cursor-pointer">2027-2028</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => { setTimeframe("2028-2029"); toast.info("Filter applied: 2028-2029"); }} className="cursor-pointer">2028-2029</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => { setTimeframe("2029-2030"); toast.info("Filter applied: 2029-2030"); }} className="cursor-pointer">2029-2030</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -284,7 +285,7 @@ function Dashboard() {
       />
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
-        <KpiCard label="Organization Goals" value={totalOrgGoals} delta={8} hint="vs last quarter" icon={Target} />
+        <KpiCard label="Annual Goals" value={totalOrgGoals} delta={8} hint="vs last quarter" icon={Target} />
         <KpiCard label="SMART Goals" value={totalSmartGoals} delta={12} hint="active" icon={CheckCircle2} />
         <KpiCard label="Action Items Open" value={openActionItems} delta={-4} hint="in flight" icon={ListTodo} />
         <KpiCard label="Challenges Raised" value={challengesRaised} delta={3} hint="open blockers" icon={AlertTriangle} />

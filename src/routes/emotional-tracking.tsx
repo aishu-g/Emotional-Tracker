@@ -264,6 +264,7 @@ function EmotionalTrackingPage() {
   const { profile } = useWorkspaceStore();
   const [logs, setLogs] = useState<EmotionalDailyLog[]>([]);
   const [activeTab, setActiveTab] = useState<string>("matrix");
+  const [selectedDate, setSelectedDate] = useState<string>("");
   
   // Form editing states
   const [editLogId, setEditLogId] = useState<string | null>(null);
@@ -314,6 +315,19 @@ function EmotionalTrackingPage() {
   const sortedLogs = useMemo(() => {
     return [...logs].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }, [logs]);
+
+  // Initialize selected date to the latest date from sorted logs
+  useEffect(() => {
+    if (logs.length > 0 && !selectedDate) {
+      const sorted = [...logs].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      setSelectedDate(sorted[sorted.length - 1].date);
+    }
+  }, [logs, selectedDate]);
+
+  // Active log shown in table column
+  const activeLog = useMemo(() => {
+    return logs.find(log => log.date === selectedDate);
+  }, [selectedDate, logs]);
 
   // Reset ratings to defaults
   const initializeFormRatings = (existingLog?: EmotionalDailyLog) => {
@@ -373,6 +387,17 @@ function EmotionalTrackingPage() {
       const updated = logs.filter(l => l.id !== id);
       setLogs(updated);
       localStorage.setItem("emotionalTrackerLogs", JSON.stringify(updated));
+      
+      // If the deleted log was currently selected, select another remaining log
+      if (selectedDate === id) {
+        if (updated.length > 0) {
+          const sortedRemaining = [...updated].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+          setSelectedDate(sortedRemaining[sortedRemaining.length - 1].date);
+        } else {
+          setSelectedDate("");
+        }
+      }
+      
       toast.success("Entry deleted successfully!");
     }
   };
@@ -382,6 +407,7 @@ function EmotionalTrackingPage() {
     if (confirm("This will restore the default tracker entries and delete your customizations. Proceed?")) {
       setLogs(SEED_LOGS);
       localStorage.setItem("emotionalTrackerLogs", JSON.stringify(SEED_LOGS));
+      setSelectedDate(""); // triggers useEffect initializer
       toast.success("Default emotional tracking data restored!");
     }
   };
@@ -423,6 +449,9 @@ function EmotionalTrackingPage() {
 
     setLogs(updatedLogs);
     localStorage.setItem("emotionalTrackerLogs", JSON.stringify(updatedLogs));
+    
+    // Auto-select the newly saved or updated date
+    setSelectedDate(formDate);
     
     // Reset edit ID and navigate back to Matrix
     setEditLogId(null);
@@ -763,135 +792,163 @@ function EmotionalTrackingPage() {
                 </Button>
               </div>
             ) : (
-              <div className="overflow-x-auto rounded-xl border bg-card max-w-full">
-                <Table className="border-collapse">
-                  <TableHeader>
-                    <TableRow className="bg-muted/40 hover:bg-muted/40">
-                      <TableHead className="min-w-[180px] font-semibold border-r sticky left-0 bg-background shadow-[2px_0_5px_rgba(0,0,0,0.05)]">
-                        Categories (Scale 1-10)
-                      </TableHead>
-                      <TableHead className="min-w-[90px] text-center font-bold border-r text-foreground">
-                        AVG Score
-                      </TableHead>
+              <div className="space-y-4">
+                {/* Single Log Selector Dropdown */}
+                <div className="flex items-center gap-3 p-4 rounded-xl border bg-muted/10 max-w-sm">
+                  <span className="text-sm font-semibold text-muted-foreground whitespace-nowrap">Log Entry:</span>
+                  <Select value={selectedDate} onValueChange={setSelectedDate}>
+                    <SelectTrigger className="w-full h-9 bg-background border-input cursor-pointer">
+                      <SelectValue placeholder="Select log date" />
+                    </SelectTrigger>
+                    <SelectContent>
                       {sortedLogs.map(log => {
-                        const d = new Date(log.date);
-                        const labelDay = d.toLocaleDateString("en-US", { weekday: "short" });
-                        const labelDate = `${d.getDate()}-${d.getMonth() + 1}`;
+                        const logDate = new Date(log.date);
+                        const dayName = logDate.toLocaleDateString("en-US", { weekday: "long" });
+                        const formattedDate = `${String(logDate.getDate()).padStart(2, "0")}-${String(logDate.getMonth() + 1).padStart(2, "0")}-${logDate.getFullYear()}`;
                         return (
-                          <TableHead 
-                            key={log.id} 
-                            onClick={() => handleEditEntry(log)}
-                            className="min-w-[95px] text-center cursor-pointer hover:bg-muted transition font-medium border-r relative group"
-                            title="Click to edit this day's log entry"
-                          >
-                            <div className="text-[11px] text-muted-foreground uppercase">{labelDay}</div>
-                            <div className="text-sm font-bold text-foreground">{labelDate}</div>
-                            <div className="text-[10px] text-primary hidden group-hover:block absolute bottom-0.5 left-0 right-0 text-center font-semibold">
-                              [Edit]
-                            </div>
-                          </TableHead>
+                          <SelectItem key={log.id} value={log.date} className="cursor-pointer">
+                            {dayName} ({formattedDate})
+                          </SelectItem>
                         );
                       })}
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    
-                    {/* Render Category Rows by Section */}
-                    {(["health", "family", "business", "personal"] as const).map(sectionKey => {
-                      const sectionCatList = CATEGORIES.filter(c => c.section === sectionKey);
-                      return (
-                        <React.Fragment key={sectionKey}>
-                          {/* Header Separator Row */}
-                          <TableRow className="bg-muted/20 font-bold hover:bg-muted/20">
-                            <TableCell colSpan={sortedLogs.length + 2} className="py-2 text-[11px] uppercase tracking-wider text-muted-foreground border-b border-t">
-                              {SECTIONS[sectionKey].label}
-                            </TableCell>
-                          </TableRow>
+                    </SelectContent>
+                  </Select>
+                </div>
 
-                          {/* Categories inside this section */}
-                          {sectionCatList.map(cat => {
-                            const timelineAvg = calculateCategoryTimelineAverage(cat.id);
-                            return (
-                              <TableRow key={cat.id} className="hover:bg-muted/25">
-                                <TableCell className="text-xs pl-6 border-r font-medium text-foreground/80 sticky left-0 bg-background shadow-[2px_0_5px_rgba(0,0,0,0.05)]">
-                                  {cat.name}
-                                </TableCell>
-                                <TableCell className="text-xs text-center border-r font-bold text-muted-foreground bg-muted/10">
-                                  {timelineAvg}
-                                </TableCell>
-                                {sortedLogs.map(log => {
-                                  const cellData = log.ratings[cat.id];
-                                  const emotionObj = getEmotionDetails(cellData?.emotion || "");
-                                  return (
-                                    <TableCell 
-                                      key={log.id} 
-                                      className={`text-xs text-center border-r p-2.5 transition ${getRatingCellColor(cellData?.rating)}`}
-                                      title={cellData?.notes ? `${cat.name} notes: "${cellData.notes}"` : undefined}
-                                    >
-                                      <div className="flex flex-col items-center justify-center leading-none">
-                                        <span className="font-bold text-[13px]">{cellData?.rating ?? "—"}</span>
-                                        {cellData?.emotion && (
-                                          <span className="text-[11px] mt-0.5" title={cellData.emotion}>
-                                            {emotionObj.emoji}
-                                          </span>
-                                        )}
-                                      </div>
-                                    </TableCell>
-                                  );
-                                })}
-                              </TableRow>
-                            );
-                          })}
+                <div className="overflow-x-auto rounded-xl border bg-card max-w-full">
+                  <Table className="border-collapse">
+                    <TableHeader>
+                      <TableRow className="bg-muted/40 hover:bg-muted/40">
+                        <TableHead className="min-w-[180px] font-semibold border-r sticky left-0 bg-background shadow-[2px_0_5px_rgba(0,0,0,0.05)]">
+                          Categories (Scale 1-10)
+                        </TableHead>
+                        <TableHead className="min-w-[90px] text-center font-bold border-r text-foreground">
+                          AVG Score
+                        </TableHead>
+                        <TableHead className="min-w-[180px] text-center border-r font-bold text-foreground py-2 bg-muted/10">
+                          {activeLog ? (
+                            <div className="flex flex-col items-center justify-center">
+                              <div className="text-xs text-muted-foreground uppercase font-bold tracking-wider">
+                                {new Date(activeLog.date).toLocaleDateString("en-US", { weekday: "long" })}
+                              </div>
+                              <div className="text-sm font-bold text-foreground mt-0.5">
+                                ({String(new Date(activeLog.date).getDate()).padStart(2, "0")}-{String(new Date(activeLog.date).getMonth() + 1).padStart(2, "0")}-{new Date(activeLog.date).getFullYear()})
+                              </div>
+                              <div 
+                                onClick={() => handleEditEntry(activeLog)}
+                                className="text-[10px] text-primary cursor-pointer hover:underline mt-1 font-semibold"
+                                title="Click to edit this day's log entry"
+                              >
+                                [Edit]
+                              </div>
+                            </div>
+                          ) : "—"}
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      
+                      {/* Render Category Rows by Section */}
+                      {(["health", "family", "business", "personal"] as const).map(sectionKey => {
+                        const sectionCatList = CATEGORIES.filter(c => c.section === sectionKey);
+                        return (
+                          <React.Fragment key={sectionKey}>
+                            {/* Header Separator Row */}
+                            <TableRow className="bg-muted/20 font-bold hover:bg-muted/20">
+                              <TableCell colSpan={3} className="py-2 text-[11px] uppercase tracking-wider text-muted-foreground border-b border-t">
+                                {SECTIONS[sectionKey].label}
+                              </TableCell>
+                            </TableRow>
 
-                          {/* Section summary Overall average row */}
-                          <TableRow className="bg-yellow-50/50 dark:bg-yellow-950/10 font-semibold hover:bg-yellow-50/60">
-                            <TableCell className="text-xs border-r pl-4 font-bold text-amber-900 dark:text-amber-300 uppercase sticky left-0 bg-yellow-50/50 dark:bg-yellow-950/10 shadow-[2px_0_5px_rgba(0,0,0,0.05)]">
-                              Over all score & Emotions
-                            </TableCell>
-                            <TableCell className="text-xs text-center border-r font-extrabold text-amber-800 dark:text-amber-400 bg-amber-100/30">
-                              {calculateSectionOverallAverage(sectionKey)}
-                            </TableCell>
-                            {sortedLogs.map(log => {
-                              const secAvg = calculateDaySectionAverage(log, sectionKey);
+                            {/* Categories inside this section */}
+                            {sectionCatList.map(cat => {
+                              const timelineAvg = calculateCategoryTimelineAverage(cat.id);
                               return (
-                                <TableCell key={log.id} className="text-xs text-center font-extrabold border-r text-amber-800 dark:text-amber-400 p-2.5 bg-yellow-50/30">
-                                  {secAvg}
-                                </TableCell>
+                                <TableRow key={cat.id} className="hover:bg-muted/25">
+                                  <TableCell className="text-xs pl-6 border-r font-medium text-foreground/80 sticky left-0 bg-background shadow-[2px_0_5px_rgba(0,0,0,0.05)]">
+                                    {cat.name}
+                                  </TableCell>
+                                  <TableCell className="text-xs text-center border-r font-bold text-muted-foreground bg-muted/10">
+                                    {timelineAvg}
+                                  </TableCell>
+                                  {activeLog ? (() => {
+                                    const cellData = activeLog.ratings[cat.id];
+                                    const emotionObj = getEmotionDetails(cellData?.emotion || "");
+                                    return (
+                                      <TableCell 
+                                        className={`text-xs text-center border-r p-2.5 transition ${getRatingCellColor(cellData?.rating)}`}
+                                        title={cellData?.notes ? `${cat.name} notes: "${cellData.notes}"` : undefined}
+                                      >
+                                        <div className="flex flex-col items-center justify-center leading-none">
+                                          <span className="font-bold text-[13px]">{cellData?.rating ?? "—"}</span>
+                                          {cellData?.emotion && (
+                                            <span className="text-[11px] mt-0.5" title={cellData.emotion}>
+                                              {emotionObj.emoji}
+                                            </span>
+                                          )}
+                                        </div>
+                                      </TableCell>
+                                    );
+                                  })() : (
+                                    <TableCell className="text-xs text-center border-r p-2.5 text-muted-foreground">—</TableCell>
+                                  )}
+                                </TableRow>
                               );
                             })}
-                          </TableRow>
-                        </React.Fragment>
-                      );
-                    })}
 
-                    {/* Bottom Space/Divider */}
-                    <TableRow className="h-4 bg-muted/5 hover:bg-transparent"><TableCell colSpan={sortedLogs.length + 2} className="border-y-0"></TableCell></TableRow>
-
-                    {/* Overall Daily averages row */}
-                    <TableRow className="bg-primary/5 hover:bg-primary/10 border-t border-b-2 font-bold text-foreground">
-                      <TableCell className="text-sm pl-4 border-r font-extrabold uppercase sticky left-0 bg-card shadow-[2px_0_5px_rgba(0,0,0,0.05)]">
-                        Day's score and Emotions (Overall)
-                      </TableCell>
-                      <TableCell className="text-sm text-center border-r font-black bg-primary/10 text-primary">
-                        {overallAbsoluteAverage}
-                      </TableCell>
-                      {sortedLogs.map(log => {
-                        const dayOverall = calculateDayOverallAverage(log);
-                        const predominantEmotionDetails = getEmotionDetails(log.predominantEmotion);
-                        return (
-                          <TableCell key={log.id} className="text-sm text-center border-r font-black p-2.5 bg-primary/5 text-primary">
-                            <div className="flex flex-col items-center justify-center leading-none">
-                              <span>{dayOverall}</span>
-                              <span className="text-[13px] mt-0.5" title={`Predominant emotion: ${log.predominantEmotion}`}>
-                                {predominantEmotionDetails.emoji}
-                              </span>
-                            </div>
-                          </TableCell>
+                            {/* Section summary Overall average row */}
+                            <TableRow className="bg-yellow-50/50 dark:bg-yellow-950/10 font-semibold hover:bg-yellow-50/60">
+                              <TableCell className="text-xs border-r pl-4 font-bold text-amber-900 dark:text-amber-300 uppercase sticky left-0 bg-yellow-50/50 dark:bg-yellow-950/10 shadow-[2px_0_5px_rgba(0,0,0,0.05)]">
+                                Over all score & Emotions
+                              </TableCell>
+                              <TableCell className="text-xs text-center border-r font-extrabold text-amber-800 dark:text-amber-400 bg-amber-100/30">
+                                {calculateSectionOverallAverage(sectionKey)}
+                              </TableCell>
+                              {activeLog ? (
+                                <TableCell className="text-xs text-center font-extrabold border-r text-amber-800 dark:text-amber-400 p-2.5 bg-yellow-50/30">
+                                  {calculateDaySectionAverage(activeLog, sectionKey)}
+                                </TableCell>
+                              ) : (
+                                <TableCell className="text-xs text-center border-r p-2.5 text-muted-foreground">—</TableCell>
+                              )}
+                            </TableRow>
+                          </React.Fragment>
                         );
                       })}
-                    </TableRow>
-                  </TableBody>
-                </Table>
+
+                      {/* Bottom Space/Divider */}
+                      <TableRow className="h-4 bg-muted/5 hover:bg-transparent">
+                        <TableCell colSpan={3} className="border-y-0"></TableCell>
+                      </TableRow>
+
+                      {/* Overall Daily averages row */}
+                      <TableRow className="bg-primary/5 hover:bg-primary/10 border-t border-b-2 font-bold text-foreground">
+                        <TableCell className="text-sm pl-4 border-r font-extrabold uppercase sticky left-0 bg-card shadow-[2px_0_5px_rgba(0,0,0,0.05)]">
+                          Day's score and Emotions (Overall)
+                        </TableCell>
+                        <TableCell className="text-sm text-center border-r font-black bg-primary/10 text-primary">
+                          {overallAbsoluteAverage}
+                        </TableCell>
+                        {activeLog ? (() => {
+                          const dayOverall = calculateDayOverallAverage(activeLog);
+                          const predominantEmotionDetails = getEmotionDetails(activeLog.predominantEmotion);
+                          return (
+                            <TableCell className="text-sm text-center border-r font-black p-2.5 bg-primary/5 text-primary">
+                              <div className="flex flex-col items-center justify-center leading-none">
+                                <span>{dayOverall}</span>
+                                <span className="text-[13px] mt-0.5" title={`Predominant emotion: ${activeLog.predominantEmotion}`}>
+                                  {predominantEmotionDetails.emoji}
+                                </span>
+                              </div>
+                            </TableCell>
+                          );
+                        })() : (
+                          <TableCell className="text-sm text-center border-r p-2.5 text-muted-foreground">—</TableCell>
+                        )}
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </div>
               </div>
             )}
           </SectionCard>
@@ -906,9 +963,11 @@ function EmotionalTrackingPage() {
                       <TableRow className="bg-muted/40 hover:bg-muted/40">
                         <TableHead className="font-semibold">Section</TableHead>
                         <TableHead className="text-center font-semibold">Total AVG</TableHead>
-                        {sortedLogs.map(log => (
-                          <TableHead key={log.id} className="text-center font-semibold">{log.date.substring(5)}</TableHead>
-                        ))}
+                        {activeLog && (
+                          <TableHead className="text-center font-semibold">
+                            {new Date(activeLog.date).toLocaleDateString("en-US", { weekday: "short" })} {activeLog.date.substring(8)}-{activeLog.date.substring(5, 7)}
+                          </TableHead>
+                        )}
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -922,24 +981,22 @@ function EmotionalTrackingPage() {
                           <TableRow key={secKey}>
                             <TableCell className="font-medium text-xs">{secLabel}</TableCell>
                             <TableCell className="text-center font-bold text-xs text-muted-foreground">{Math.round(timelineSecAvg * 10)}%</TableCell>
-                            {sortedLogs.map(log => {
-                              const dayAvg = calculateDaySectionAverage(log, secKey);
-                              return (
-                                <TableCell key={log.id} className="text-center text-xs">{Math.round(dayAvg * 10)}%</TableCell>
-                              );
-                            })}
+                            {activeLog && (
+                              <TableCell className="text-center text-xs">
+                                {Math.round(calculateDaySectionAverage(activeLog, secKey) * 10)}%
+                              </TableCell>
+                            )}
                           </TableRow>
                         );
                       })}
                       <TableRow className="bg-yellow-50/50 dark:bg-yellow-950/10 font-bold">
                         <TableCell className="text-xs uppercase text-amber-900 dark:text-amber-300">Overall Average</TableCell>
                         <TableCell className="text-center text-xs text-amber-800 dark:text-amber-400 font-extrabold">{Math.round(overallAbsoluteAverage * 10)}%</TableCell>
-                        {sortedLogs.map(log => {
-                          const dayOverall = calculateDayOverallAverage(log);
-                          return (
-                            <TableCell key={log.id} className="text-center text-xs text-amber-800 dark:text-amber-400 font-extrabold">{Math.round(dayOverall * 10)}%</TableCell>
-                          );
-                        })}
+                        {activeLog && (
+                          <TableCell className="text-center text-xs text-amber-800 dark:text-amber-400 font-extrabold">
+                            {Math.round(calculateDayOverallAverage(activeLog) * 10)}%
+                          </TableCell>
+                        )}
                       </TableRow>
                     </TableBody>
                   </Table>
