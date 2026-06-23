@@ -792,9 +792,18 @@ function EmotionalTrackingPage() {
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full max-w-[480px] grid-cols-3">
-          <TabsTrigger value="matrix" className="cursor-pointer">Daily Sheet (Matrix)</TabsTrigger>
-          <TabsTrigger value="dashboard" className="cursor-pointer">Dashboard & Trends</TabsTrigger>
-          <TabsTrigger value="entry" className="cursor-pointer">Log Entry Form</TabsTrigger>
+          <TabsTrigger value="matrix" className="cursor-pointer text-xs sm:text-sm">
+            <span className="hidden sm:inline">Daily Sheet (Matrix)</span>
+            <span className="sm:hidden">Matrix</span>
+          </TabsTrigger>
+          <TabsTrigger value="dashboard" className="cursor-pointer text-xs sm:text-sm">
+            <span className="hidden sm:inline">Dashboard & Trends</span>
+            <span className="sm:hidden">Dashboard</span>
+          </TabsTrigger>
+          <TabsTrigger value="entry" className="cursor-pointer text-xs sm:text-sm">
+            <span className="hidden sm:inline">Log Entry Form</span>
+            <span className="sm:hidden">Log Entry</span>
+          </TabsTrigger>
         </TabsList>
 
         {/* ==========================================
