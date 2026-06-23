@@ -250,7 +250,7 @@ function OrganizationGoalsPage() {
           <DialogTrigger asChild>
             <Button size="sm" className="h-9 cursor-pointer gap-1">
               <Plus className="h-3.5 w-3.5" />
-              New goal
+              New Annual goal
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[480px]">
