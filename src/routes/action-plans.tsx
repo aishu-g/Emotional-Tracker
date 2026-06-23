@@ -140,14 +140,6 @@ function ActionPlansPage() {
   const [dueDate, setDueDate] = useState("2026-07-31");
   const [actionSmartId, setActionSmartId] = useState("");
 
-  useEffect(() => {
-    if (smartFilter && smartFilter !== "all") {
-      setActionSmartId(smartFilter);
-    } else if (smartGoals.length > 0) {
-      setActionSmartId(smartGoals[0].id);
-    }
-  }, [smartFilter, smartGoals, taskDialogOpen]);
-
   const handleCreateTask = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!taskTitle || !assignee || !actionSmartId) {
@@ -622,7 +614,18 @@ function ActionPlansPage() {
           </SelectContent>
         </Select>
 
-        <Dialog open={taskDialogOpen} onOpenChange={setTaskDialogOpen}>
+        <Dialog open={taskDialogOpen} onOpenChange={(open) => {
+          setTaskDialogOpen(open);
+          if (open) {
+            if (smartFilter && smartFilter !== "all") {
+              setActionSmartId(smartFilter);
+            } else if (smartGoals.length > 0) {
+              setActionSmartId(smartGoals[0].id);
+            } else {
+              setActionSmartId("");
+            }
+          }
+        }}>
           <DialogTrigger asChild>
             <Button size="sm" className="h-9 cursor-pointer gap-1">
               <Plus className="mr-1.5 h-3.5 w-3.5" /> New action plan
