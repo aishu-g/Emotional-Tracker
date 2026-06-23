@@ -265,7 +265,7 @@ export const Route = createFileRoute("/emotional-tracking")({
 function EmotionalTrackingPage() {
   const { profile } = useWorkspaceStore();
   const [logs, setLogs] = useState<EmotionalDailyLog[]>([]);
-  const [activeTab, setActiveTab] = useState<string>("matrix");
+  const [activeTab, setActiveTab] = useState<string>("entry");
   const [selectedDate, setSelectedDate] = useState<string>("");
   
   // Form editing states
@@ -478,9 +478,9 @@ function EmotionalTrackingPage() {
     // Auto-select the newly saved or updated date
     setSelectedDate(formDate);
     
-    // Reset edit ID and navigate back to Matrix
+    // Reset edit ID and navigate back to Dashboard
     setEditLogId(null);
-    setActiveTab("matrix");
+    setActiveTab("dashboard");
   };
 
   // ==========================================
@@ -791,327 +791,18 @@ function EmotionalTrackingPage() {
       />
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full max-w-[480px] grid-cols-3">
-          <TabsTrigger value="matrix" className="cursor-pointer text-xs sm:text-sm">
-            <span className="hidden sm:inline">Daily Sheet (Matrix)</span>
-            <span className="sm:hidden">Matrix</span>
+        <TabsList className="grid w-full max-w-[320px] grid-cols-2">
+          <TabsTrigger value="entry" className="cursor-pointer text-xs sm:text-sm">
+            <span className="hidden sm:inline">Log Entry Form</span>
+            <span className="sm:hidden">Log Entry</span>
           </TabsTrigger>
           <TabsTrigger value="dashboard" className="cursor-pointer text-xs sm:text-sm">
             <span className="hidden sm:inline">Dashboard & Trends</span>
             <span className="sm:hidden">Dashboard</span>
           </TabsTrigger>
-          <TabsTrigger value="entry" className="cursor-pointer text-xs sm:text-sm">
-            <span className="hidden sm:inline">Log Entry Form</span>
-            <span className="sm:hidden">Log Entry</span>
-          </TabsTrigger>
         </TabsList>
 
-        {/* ==========================================
-            TAB 1: DAILY SHEET (MATRIX)
-            ========================================== */}
-        <TabsContent value="matrix" className="space-y-6 mt-4">
-          <SectionCard 
-            title="Daily Sheet Tracker" 
-            description="Replicates the Excel spreadsheet structure. Columns represent dates; rows represent categories. Click a date header to edit that entry."
-          >
-            {logs.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <Smile className="h-12 w-12 text-muted-foreground opacity-50 mb-3" />
-                <h3 className="text-lg font-medium">No tracker logs logged</h3>
-                <p className="text-sm text-muted-foreground mt-1 max-w-sm">
-                  Start logging your daily numbers and emotions using the Entry form!
-                </p>
-                <Button onClick={handleNewEntry} className="mt-4 cursor-pointer">
-                  Create First Entry
-                </Button>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {/* Single Log Selector Date Picker */}
-                <div className="flex items-center gap-3 p-4 rounded-xl border bg-muted/10 max-w-sm">
-                  <span className="text-sm font-semibold text-muted-foreground whitespace-nowrap">Log Entry:</span>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="w-full h-9 bg-background border-input justify-between text-left font-normal cursor-pointer animate-fade-in"
-                      >
-                        <span className="truncate">
-                          {selectedDate ? (
-                            (() => {
-                              const logDate = new Date(selectedDate + "T00:00:00");
-                              const dayName = logDate.toLocaleDateString("en-US", { weekday: "long" });
-                              const formattedDate = `${String(logDate.getDate()).padStart(2, "0")}-${String(logDate.getMonth() + 1).padStart(2, "0")}-${logDate.getFullYear()}`;
-                              return `${dayName} (${formattedDate})`;
-                            })()
-                          ) : (
-                            "Select log date"
-                          )}
-                        </span>
-                        <CalendarDays className="ml-2 h-4 w-4 shrink-0 text-muted-foreground" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={selectedDate ? new Date(selectedDate + "T00:00:00") : undefined}
-                        onSelect={(date) => {
-                          if (date) {
-                            const year = date.getFullYear();
-                            const month = String(date.getMonth() + 1).padStart(2, "0");
-                            const day = String(date.getDate()).padStart(2, "0");
-                            setSelectedDate(`${year}-${month}-${day}`);
-                          }
-                        }}
-                        modifiers={{ hasLog: logDates }}
-                        modifiersClassNames={{ hasLog: "bg-primary/10 font-bold border border-primary/20" }}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
 
-                <div className="overflow-x-auto rounded-xl border bg-card max-w-full">
-                  <Table className="border-collapse">
-                    <TableHeader>
-                      <TableRow className="bg-muted/40 hover:bg-muted/40">
-                        <TableHead className="min-w-[180px] font-semibold border-r sticky left-0 bg-background shadow-[2px_0_5px_rgba(0,0,0,0.05)]">
-                          Categories (Scale 1-10)
-                        </TableHead>
-                        <TableHead className="min-w-[90px] text-center font-bold border-r text-foreground">
-                          AVG Score
-                        </TableHead>
-                        <TableHead className="min-w-[180px] text-center border-r font-bold text-foreground py-2 bg-muted/10">
-                          {activeLog ? (
-                            <div className="flex flex-col items-center justify-center">
-                              <div className="text-xs text-muted-foreground uppercase font-bold tracking-wider">
-                                {new Date(activeLog.date + "T00:00:00").toLocaleDateString("en-US", { weekday: "long" })}
-                              </div>
-                              <div className="text-sm font-bold text-foreground mt-0.5">
-                                ({String(new Date(activeLog.date + "T00:00:00").getDate()).padStart(2, "0")}-{String(new Date(activeLog.date + "T00:00:00").getMonth() + 1).padStart(2, "0")}-{new Date(activeLog.date + "T00:00:00").getFullYear()})
-                              </div>
-                              <div 
-                                onClick={() => handleEditEntry(activeLog)}
-                                className="text-[10px] text-primary cursor-pointer hover:underline mt-1 font-semibold"
-                                title="Click to edit this day's log entry"
-                              >
-                                [Edit]
-                              </div>
-                            </div>
-                          ) : selectedDate ? (
-                            <div className="flex flex-col items-center justify-center">
-                              <div className="text-xs text-muted-foreground uppercase font-bold tracking-wider">
-                                {new Date(selectedDate + "T00:00:00").toLocaleDateString("en-US", { weekday: "long" })}
-                              </div>
-                              <div className="text-sm font-bold text-foreground mt-0.5">
-                                ({String(new Date(selectedDate + "T00:00:00").getDate()).padStart(2, "0")}-{String(new Date(selectedDate + "T00:00:00").getMonth() + 1).padStart(2, "0")}-{new Date(selectedDate + "T00:00:00").getFullYear()})
-                              </div>
-                              <div 
-                                onClick={() => handleNewEntryForDate(selectedDate)}
-                                className="text-[10px] text-primary cursor-pointer hover:underline mt-1 font-semibold animate-pulse"
-                                title="Click to create a new log entry for this day"
-                              >
-                                [Log this Day]
-                              </div>
-                            </div>
-                          ) : "—"}
-                        </TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      
-                      {/* Render Category Rows by Section */}
-                      {(["health", "family", "business", "personal"] as const).map(sectionKey => {
-                        const sectionCatList = CATEGORIES.filter(c => c.section === sectionKey);
-                        return (
-                          <React.Fragment key={sectionKey}>
-                            {/* Header Separator Row */}
-                            <TableRow className="bg-muted/20 font-bold hover:bg-muted/20">
-                              <TableCell colSpan={3} className="py-2 text-[11px] uppercase tracking-wider text-muted-foreground border-b border-t">
-                                {SECTIONS[sectionKey].label}
-                              </TableCell>
-                            </TableRow>
-
-                            {/* Categories inside this section */}
-                            {sectionCatList.map(cat => {
-                              const timelineAvg = calculateCategoryTimelineAverage(cat.id);
-                              return (
-                                <TableRow key={cat.id} className="hover:bg-muted/25">
-                                  <TableCell className="text-xs pl-6 border-r font-medium text-foreground/80 sticky left-0 bg-background shadow-[2px_0_5px_rgba(0,0,0,0.05)]">
-                                    {cat.name}
-                                  </TableCell>
-                                  <TableCell className="text-xs text-center border-r font-bold text-muted-foreground bg-muted/10">
-                                    {timelineAvg}
-                                  </TableCell>
-                                  {activeLog ? (() => {
-                                    const cellData = activeLog.ratings[cat.id];
-                                    const emotionObj = getEmotionDetails(cellData?.emotion || "");
-                                    return (
-                                      <TableCell 
-                                        className={`text-xs text-center border-r p-2.5 transition ${getRatingCellColor(cellData?.rating)}`}
-                                        title={cellData?.notes ? `${cat.name} notes: "${cellData.notes}"` : undefined}
-                                      >
-                                        <div className="flex flex-col items-center justify-center leading-none">
-                                          <span className="font-bold text-[13px]">{cellData?.rating ?? "—"}</span>
-                                          {cellData?.emotion && (
-                                            <span className="text-[11px] mt-0.5" title={cellData.emotion}>
-                                              {emotionObj.emoji}
-                                            </span>
-                                          )}
-                                        </div>
-                                      </TableCell>
-                                    );
-                                  })() : (
-                                    <TableCell className="text-xs text-center border-r p-2.5 text-muted-foreground">—</TableCell>
-                                  )}
-                                </TableRow>
-                              );
-                            })}
-
-                            {/* Section summary Overall average row */}
-                            <TableRow className="bg-yellow-50/50 dark:bg-yellow-950/10 font-semibold hover:bg-yellow-50/60">
-                              <TableCell className="text-xs border-r pl-4 font-bold text-amber-900 dark:text-amber-300 uppercase sticky left-0 bg-yellow-50/50 dark:bg-yellow-950/10 shadow-[2px_0_5px_rgba(0,0,0,0.05)]">
-                                Over all score & Emotions
-                              </TableCell>
-                              <TableCell className="text-xs text-center border-r font-extrabold text-amber-800 dark:text-amber-400 bg-amber-100/30">
-                                {calculateSectionOverallAverage(sectionKey)}
-                              </TableCell>
-                              {activeLog ? (
-                                <TableCell className="text-xs text-center font-extrabold border-r text-amber-800 dark:text-amber-400 p-2.5 bg-yellow-50/30">
-                                  {calculateDaySectionAverage(activeLog, sectionKey)}
-                                </TableCell>
-                              ) : (
-                                <TableCell className="text-xs text-center border-r p-2.5 text-muted-foreground">—</TableCell>
-                              )}
-                            </TableRow>
-                          </React.Fragment>
-                        );
-                      })}
-
-                      {/* Bottom Space/Divider */}
-                      <TableRow className="h-4 bg-muted/5 hover:bg-transparent">
-                        <TableCell colSpan={3} className="border-y-0"></TableCell>
-                      </TableRow>
-
-                      {/* Overall Daily averages row */}
-                      <TableRow className="bg-primary/5 hover:bg-primary/10 border-t border-b-2 font-bold text-foreground">
-                        <TableCell className="text-sm pl-4 border-r font-extrabold uppercase sticky left-0 bg-card shadow-[2px_0_5px_rgba(0,0,0,0.05)]">
-                          Day's score and Emotions (Overall)
-                        </TableCell>
-                        <TableCell className="text-sm text-center border-r font-black bg-primary/10 text-primary">
-                          {overallAbsoluteAverage}
-                        </TableCell>
-                        {activeLog ? (() => {
-                          const dayOverall = calculateDayOverallAverage(activeLog);
-                          const predominantEmotionDetails = getEmotionDetails(activeLog.predominantEmotion);
-                          return (
-                            <TableCell className="text-sm text-center border-r font-black p-2.5 bg-primary/5 text-primary">
-                              <div className="flex flex-col items-center justify-center leading-none">
-                                <span>{dayOverall}</span>
-                                <span className="text-[13px] mt-0.5" title={`Predominant emotion: ${activeLog.predominantEmotion}`}>
-                                  {predominantEmotionDetails.emoji}
-                                </span>
-                              </div>
-                            </TableCell>
-                          );
-                        })() : (
-                          <TableCell className="text-sm text-center border-r p-2.5 text-muted-foreground">—</TableCell>
-                        )}
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </div>
-              </div>
-            )}
-          </SectionCard>
-
-          {/* Matrix Bottom Category Summary */}
-          {logs.length > 0 && (
-            <div className="grid gap-6 md:grid-cols-2">
-              <SectionCard title="Category score percentages" description="Replicates the summary table from Screenshot 4. Displays averages as a percentage of 10.">
-                <div className="rounded-xl border bg-card overflow-hidden">
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="bg-muted/40 hover:bg-muted/40">
-                        <TableHead className="font-semibold">Section</TableHead>
-                        <TableHead className="text-center font-semibold">Total AVG</TableHead>
-                        {activeLog && (
-                          <TableHead className="text-center font-semibold">
-                            {new Date(activeLog.date).toLocaleDateString("en-US", { weekday: "short" })} {activeLog.date.substring(8)}-{activeLog.date.substring(5, 7)}
-                          </TableHead>
-                        )}
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {(["health", "family", "business", "personal"] as const).map(secKey => {
-                        const secLabel = secKey === "health" ? "Health" 
-                          : secKey === "family" ? "Friends & Family"
-                          : secKey === "business" ? "Business & Career"
-                          : "Personal";
-                        const timelineSecAvg = calculateSectionOverallAverage(secKey);
-                        return (
-                          <TableRow key={secKey}>
-                            <TableCell className="font-medium text-xs">{secLabel}</TableCell>
-                            <TableCell className="text-center font-bold text-xs text-muted-foreground">{Math.round(timelineSecAvg * 10)}%</TableCell>
-                            {activeLog && (
-                              <TableCell className="text-center text-xs">
-                                {Math.round(calculateDaySectionAverage(activeLog, secKey) * 10)}%
-                              </TableCell>
-                            )}
-                          </TableRow>
-                        );
-                      })}
-                      <TableRow className="bg-yellow-50/50 dark:bg-yellow-950/10 font-bold">
-                        <TableCell className="text-xs uppercase text-amber-900 dark:text-amber-300">Overall Average</TableCell>
-                        <TableCell className="text-center text-xs text-amber-800 dark:text-amber-400 font-extrabold">{Math.round(overallAbsoluteAverage * 10)}%</TableCell>
-                        {activeLog && (
-                          <TableCell className="text-center text-xs text-amber-800 dark:text-amber-400 font-extrabold">
-                            {Math.round(calculateDayOverallAverage(activeLog) * 10)}%
-                          </TableCell>
-                        )}
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </div>
-              </SectionCard>
-
-              {/* Day details side card */}
-              <SectionCard title="Direct priority & specific asks list" description="Key notes logged across days.">
-                <div className="space-y-4 max-h-[315px] overflow-y-auto pr-1">
-                  {sortedLogs.map(log => (
-                    <div key={log.id} className="p-3 border rounded-xl bg-card/50 hover:bg-card transition text-xs space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="font-semibold text-sm flex items-center gap-1">
-                          <CalendarDays className="h-3.5 w-3.5 text-muted-foreground" />
-                          {log.date}
-                        </span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-[11px] bg-muted px-2 py-0.5 rounded-full font-medium flex items-center gap-1">
-                            {getEmotionDetails(log.predominantEmotion).emoji} {log.predominantEmotion}
-                          </span>
-                          <Button size="icon" variant="ghost" className="h-6 w-6 cursor-pointer" onClick={() => handleEditEntry(log)}>
-                            <Edit className="h-3 w-3" />
-                          </Button>
-                          <Button size="icon" variant="ghost" className="h-6 w-6 text-rose-600 hover:text-rose-700 cursor-pointer" onClick={(e) => handleDeleteEntry(log.id, e)}>
-                            <Trash2 className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground font-medium block">First Order Priority:</span>
-                        <span className="font-normal text-foreground">{log.firstOrderPriority || "—"}</span>
-                      </div>
-                      <div>
-                        <span className="text-muted-foreground font-medium block">Specific Ask:</span>
-                        <span className="font-normal text-foreground">{log.specificAsk || "—"}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </SectionCard>
-            </div>
-          )}
-        </TabsContent>
 
         {/* ==========================================
             TAB 2: DASHBOARD & TRENDS
