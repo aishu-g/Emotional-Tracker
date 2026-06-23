@@ -25,6 +25,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import { useLanguage } from "@/hooks/use-language";
@@ -64,7 +65,14 @@ const systemNav: SidebarItem[] = [
 export function AppSidebar() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const { t } = useLanguage();
+  const { setOpenMobile, isMobile } = useSidebar();
   
+  const handleLinkClick = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
+
   const isActive = (url: string) =>
     url === "/" ? pathname === "/" : pathname === url || pathname.startsWith(url + "/");
 
@@ -91,7 +99,7 @@ export function AppSidebar() {
                   <SidebarMenuItem>
                     <div className="flex items-center justify-between w-full">
                       <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={t(item.title)} className="flex-1">
-                        <Link to={item.url} className="flex items-center gap-3">
+                        <Link to={item.url} className="flex items-center gap-3" onClick={handleLinkClick}>
                           <item.icon className="h-4 w-4 shrink-0" />
                           <span className="truncate">{t(item.title)}</span>
                         </Link>
@@ -107,7 +115,7 @@ export function AppSidebar() {
                         {item.items?.map((subItem) => (
                           <SidebarMenuSubItem key={subItem.title}>
                             <SidebarMenuSubButton asChild isActive={isActive(subItem.url)}>
-                              <Link to={subItem.url}>
+                              <Link to={subItem.url} onClick={handleLinkClick}>
                                 <span>{t(subItem.title)}</span>
                               </Link>
                             </SidebarMenuSubButton>
@@ -123,7 +131,7 @@ export function AppSidebar() {
             return (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={t(item.title)}>
-                  <Link to={item.url} className="flex items-center gap-3">
+                  <Link to={item.url} className="flex items-center gap-3" onClick={handleLinkClick}>
                     <item.icon className="h-4 w-4 shrink-0" />
                     <span className="truncate">{t(item.title)}</span>
                   </Link>
