@@ -205,142 +205,6 @@ function OrganizationGoalsPage() {
                 <List className="h-3.5 w-3.5" /> Table
               </button>
             </div>
-            
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger asChild>
-                <Button size="sm" className="cursor-pointer gap-1">
-                  <Plus className="h-3.5 w-3.5" />
-                  New goal
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[480px]">
-                <form onSubmit={handleCreate}>
-                  <DialogHeader>
-                    <DialogTitle>Create Strategic Objective</DialogTitle>
-                    <DialogDescription>
-                      Add a high-level organizational goal.
-                    </DialogDescription>
-                  </DialogHeader>
-                  
-                  <div className="grid gap-4 py-4">
-                    <div className="space-y-1.5">
-                      <Label htmlFor="goal-name">Goal Name *</Label>
-                      <Input
-                        id="goal-name"
-                        placeholder="e.g. Expand gross retention to 96%"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        required
-                      />
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="space-y-1.5">
-                        <Label>Department</Label>
-                        <Select value={department} onValueChange={setDepartment}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Department" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {departments.map((dept) => (
-                              <SelectItem key={dept} value={dept}>{dept}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-1.5">
-                        <Label htmlFor="goal-owner">Owner *</Label>
-                        <Input
-                          id="goal-owner"
-                          placeholder="e.g. Sarah Chen"
-                          value={owner}
-                          onChange={(e) => setOwner(e.target.value)}
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-3">
-                      <div className="space-y-1.5 col-span-1">
-                        <Label>Status</Label>
-                        <Select value={status} onValueChange={setStatus}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Status" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {orgGoalStatuses.map((st) => (
-                              <SelectItem key={st} value={st}>{st}</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-1.5 col-span-1">
-                        <Label htmlFor="goal-progress">Progress %</Label>
-                        <Input
-                          id="goal-progress"
-                          type="number"
-                          min={0}
-                          max={100}
-                          value={progressVal}
-                          onChange={(e) => setProgressVal(Number(e.target.value))}
-                        />
-                      </div>
-                      <div className="space-y-1.5 col-span-1">
-                        <Label htmlFor="goal-smart-count">Smart Goals</Label>
-                        <Input
-                          id="goal-smart-count"
-                          type="number"
-                          min={0}
-                          value={smartGoalCount}
-                          onChange={(e) => setSmartGoalCount(Number(e.target.value))}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-3">
-                      <div className="space-y-1.5">
-                        <Label htmlFor="goal-start">Start Date</Label>
-                        <Input
-                          id="goal-start"
-                          type="date"
-                          value={startDate}
-                          onChange={(e) => setStartDate(e.target.value)}
-                        />
-                      </div>
-                      <div className="space-y-1.5">
-                        <Label htmlFor="goal-end">End Date</Label>
-                        <Input
-                          id="goal-end"
-                          type="date"
-                          value={endDate}
-                          onChange={(e) => setEndDate(e.target.value)}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <Label htmlFor="goal-desc">Description</Label>
-                      <Textarea
-                        id="goal-desc"
-                        placeholder="Detail the target outcomes and high-level strategy..."
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        rows={3}
-                      />
-                    </div>
-                  </div>
-
-                  <DialogFooter>
-                    <DialogClose asChild>
-                      <Button variant="outline" type="button" className="cursor-pointer">
-                        Cancel
-                      </Button>
-                    </DialogClose>
-                    <Button type="submit" className="cursor-pointer">Create Goal</Button>
-                  </DialogFooter>
-                </form>
-              </DialogContent>
-            </Dialog>
           </div>
         }
       />
@@ -381,6 +245,143 @@ function OrganizationGoalsPage() {
             ))}
           </SelectContent>
         </Select>
+
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <DialogTrigger asChild>
+            <Button size="sm" className="h-9 cursor-pointer gap-1">
+              <Plus className="h-3.5 w-3.5" />
+              New goal
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[480px]">
+            <form onSubmit={handleCreate}>
+              <DialogHeader>
+                <DialogTitle>Create Strategic Objective</DialogTitle>
+                <DialogDescription>
+                  Add a high-level organizational goal.
+                </DialogDescription>
+              </DialogHeader>
+              
+              <div className="grid gap-4 py-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="goal-name">Goal Name *</Label>
+                  <Input
+                    id="goal-name"
+                    placeholder="e.g. Expand gross retention to 96%"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <Label>Department</Label>
+                    <Select value={department} onValueChange={setDepartment}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Department" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {departments.map((dept) => (
+                          <SelectItem key={dept} value={dept}>{dept}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="goal-owner">Owner *</Label>
+                    <Input
+                      id="goal-owner"
+                      placeholder="e.g. Sarah Chen"
+                      value={owner}
+                      onChange={(e) => setOwner(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="space-y-1.5 col-span-1">
+                    <Label>Status</Label>
+                    <Select value={status} onValueChange={setStatus}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {orgGoalStatuses.map((st) => (
+                          <SelectItem key={st} value={st}>{st}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-1.5 col-span-1">
+                    <Label htmlFor="goal-progress">Progress %</Label>
+                    <Input
+                      id="goal-progress"
+                      type="number"
+                      min={0}
+                      max={100}
+                      value={progressVal}
+                      onChange={(e) => setProgressVal(Number(e.target.value))}
+                    />
+                  </div>
+                  <div className="space-y-1.5 col-span-1">
+                    <Label htmlFor="goal-smart-count">Smart Goals</Label>
+                    <Input
+                      id="goal-smart-count"
+                      type="number"
+                      min={0}
+                      value={smartGoalCount}
+                      onChange={(e) => setSmartGoalCount(Number(e.target.value))}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="goal-start">Start Date</Label>
+                    <Input
+                      id="goal-start"
+                      type="date"
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="goal-end">End Date</Label>
+                    <Input
+                      id="goal-end"
+                      type="date"
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="goal-desc">Description</Label>
+                  <Textarea
+                    id="goal-desc"
+                    placeholder="Detail the target outcomes and high-level strategy..."
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    rows={3}
+                  />
+                </div>
+              </div>
+
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button variant="outline" type="button" className="cursor-pointer">
+                    Cancel
+                  </Button>
+                </DialogClose>
+                <Button type="submit" className="cursor-pointer">Create Goal</Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+
         <div className="ml-auto text-xs text-muted-foreground">
           Showing {rows.length} of {orgGoals.length}
         </div>
