@@ -34,6 +34,8 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/
 import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 import { toast } from "sonner";
 import * as XLSX from "xlsx";
 import { jsPDF } from "jspdf";
@@ -316,6 +318,11 @@ function EmotionalTrackingPage() {
     return [...logs].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }, [logs]);
 
+  // Log dates with entry for calendar highlighting
+  const logDates = useMemo(() => {
+    return logs.map(l => new Date(l.date + "T00:00:00"));
+  }, [logs]);
+
   // Initialize selected date to the latest date from sorted logs
   useEffect(() => {
     if (logs.length > 0 && !selectedDate) {
@@ -347,6 +354,24 @@ function EmotionalTrackingPage() {
     const today = new Date().toISOString().split("T")[0];
     setEditLogId(null);
     setFormDate(today);
+    setFormName(profile?.name || "Aishwarya G");
+    setFormEmotion("Happiness");
+    setFormPriority("");
+    setFormAsk("");
+    setChecklist({
+      prepareTime: true,
+      shareEmotions: true,
+      rightDiscussionPoint: true,
+      alignPurpose: true
+    });
+    initializeFormRatings();
+    setActiveTab("entry");
+  };
+
+  // Switch to new log entry form for a specific date
+  const handleNewEntryForDate = (dateStr: string) => {
+    setEditLogId(null);
+    setFormDate(dateStr);
     setFormName(profile?.name || "Aishwarya G");
     setFormEmotion("Happiness");
     setFormPriority("");
@@ -793,26 +818,48 @@ function EmotionalTrackingPage() {
               </div>
             ) : (
               <div className="space-y-4">
-                {/* Single Log Selector Dropdown */}
+                {/* Single Log Selector Date Picker */}
                 <div className="flex items-center gap-3 p-4 rounded-xl border bg-muted/10 max-w-sm">
                   <span className="text-sm font-semibold text-muted-foreground whitespace-nowrap">Log Entry:</span>
-                  <Select value={selectedDate} onValueChange={setSelectedDate}>
-                    <SelectTrigger className="w-full h-9 bg-background border-input cursor-pointer">
-                      <SelectValue placeholder="Select log date" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {sortedLogs.map(log => {
-                        const logDate = new Date(log.date);
-                        const dayName = logDate.toLocaleDateString("en-US", { weekday: "long" });
-                        const formattedDate = `${String(logDate.getDate()).padStart(2, "0")}-${String(logDate.getMonth() + 1).padStart(2, "0")}-${logDate.getFullYear()}`;
-                        return (
-                          <SelectItem key={log.id} value={log.date} className="cursor-pointer">
-                            {dayName} ({formattedDate})
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectContent>
-                  </Select>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full h-9 bg-background border-input justify-between text-left font-normal cursor-pointer animate-fade-in"
+                      >
+                        <span className="truncate">
+                          {selectedDate ? (
+                            (() => {
+                              const logDate = new Date(selectedDate + "T00:00:00");
+                              const dayName = logDate.toLocaleDateString("en-US", { weekday: "long" });
+                              const formattedDate = `${String(logDate.getDate()).padStart(2, "0")}-${String(logDate.getMonth() + 1).padStart(2, "0")}-${logDate.getFullYear()}`;
+                              return `${dayName} (${formattedDate})`;
+                            })()
+                          ) : (
+                            "Select log date"
+                          )}
+                        </span>
+                        <CalendarDays className="ml-2 h-4 w-4 shrink-0 text-muted-foreground" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={selectedDate ? new Date(selectedDate + "T00:00:00") : undefined}
+                        onSelect={(date) => {
+                          if (date) {
+                            const year = date.getFullYear();
+                            const month = String(date.getMonth() + 1).padStart(2, "0");
+                            const day = String(date.getDate()).padStart(2, "0");
+                            setSelectedDate(`${year}-${month}-${day}`);
+                          }
+                        }}
+                        modifiers={{ hasLog: logDates }}
+                        modifiersClassNames={{ hasLog: "bg-primary/10 font-bold border border-primary/20" }}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
 
                 <div className="overflow-x-auto rounded-xl border bg-card max-w-full">
@@ -829,10 +876,10 @@ function EmotionalTrackingPage() {
                           {activeLog ? (
                             <div className="flex flex-col items-center justify-center">
                               <div className="text-xs text-muted-foreground uppercase font-bold tracking-wider">
-                                {new Date(activeLog.date).toLocaleDateString("en-US", { weekday: "long" })}
+                                {new Date(activeLog.date + "T00:00:00").toLocaleDateString("en-US", { weekday: "long" })}
                               </div>
                               <div className="text-sm font-bold text-foreground mt-0.5">
-                                ({String(new Date(activeLog.date).getDate()).padStart(2, "0")}-{String(new Date(activeLog.date).getMonth() + 1).padStart(2, "0")}-{new Date(activeLog.date).getFullYear()})
+                                ({String(new Date(activeLog.date + "T00:00:00").getDate()).padStart(2, "0")}-{String(new Date(activeLog.date + "T00:00:00").getMonth() + 1).padStart(2, "0")}-{new Date(activeLog.date + "T00:00:00").getFullYear()})
                               </div>
                               <div 
                                 onClick={() => handleEditEntry(activeLog)}
@@ -840,6 +887,22 @@ function EmotionalTrackingPage() {
                                 title="Click to edit this day's log entry"
                               >
                                 [Edit]
+                              </div>
+                            </div>
+                          ) : selectedDate ? (
+                            <div className="flex flex-col items-center justify-center">
+                              <div className="text-xs text-muted-foreground uppercase font-bold tracking-wider">
+                                {new Date(selectedDate + "T00:00:00").toLocaleDateString("en-US", { weekday: "long" })}
+                              </div>
+                              <div className="text-sm font-bold text-foreground mt-0.5">
+                                ({String(new Date(selectedDate + "T00:00:00").getDate()).padStart(2, "0")}-{String(new Date(selectedDate + "T00:00:00").getMonth() + 1).padStart(2, "0")}-{new Date(selectedDate + "T00:00:00").getFullYear()})
+                              </div>
+                              <div 
+                                onClick={() => handleNewEntryForDate(selectedDate)}
+                                className="text-[10px] text-primary cursor-pointer hover:underline mt-1 font-semibold animate-pulse"
+                                title="Click to create a new log entry for this day"
+                              >
+                                [Log this Day]
                               </div>
                             </div>
                           ) : "—"}
