@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Northstar System Reference & Debugging Documentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #1e293b;
+      line-height: 1.6;
+      margin: 0;
+      padding: 40px;
+      background-color: #ffffff;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    header {
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 10px 0;
+      letter-spacing: -0.02em;
+    }
+    .subtitle {
+      font-size: 14px;
+      color: #4f46e5;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+    }
+    h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1e1b4b;
+      margin-top: 40px;
+      margin-bottom: 15px;
+      border-left: 4px solid #4f46e5;
+      padding-left: 12px;
+    }
+    h3 {
+      font-size: 17px;
+      font-weight: 600;
+      color: #0f172a;
+      margin-top: 25px;
+      margin-bottom: 10px;
+    }
+    p {
+      margin-top: 0;
+      margin-bottom: 15px;
+      font-size: 15px;
+      color: #334155;
+    }
+    ul, ol {
+      margin-top: 0;
+      margin-bottom: 20px;
+      padding-left: 25px;
+    }
+    li {
+      margin-bottom: 8px;
+      font-size: 15px;
+      color: #334155;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 25px;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid #e2e8f0;
+      padding: 10px 12px;
+      text-align: left;
+    }
+    th {
+      background-color: #f8fafc;
+      font-weight: 600;
+      color: #0f172a;
+    }
+    .note-box {
+      background-color: #f5f3ff;
+      border: 1px solid #ddd6fe;
+      border-left: 4px solid #8b5cf6;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 25px;
+      font-size: 14.5px;
+    }
+    .note-box-title {
+      font-weight: 700;
+      color: #6d28d9;
+      margin-bottom: 5px;
+    }
+    .highlight {
+      font-family: monospace;
+      background-color: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+      color: #0f172a;
+      border: 1px solid #e2e8f0;
+    }
+    .code-style {
+      font-family: monospace;
+      font-size: 13px;
+    }
+    footer {
+      margin-top: 60px;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 20px;
+      font-size: 12px;
+      color: #94a3b8;
+      text-align: center;
+    }
+    .page-break {
+      page-break-before: always;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="subtitle">Northstar Goal Intelligence Hub</div>
+      <h1>System Architecture & Reference Manual</h1>
+      <p style="margin: 0; color: #64748b; font-size: 13px;">Date Generated: June 20, 2026</p>
+    </header>
+
+    <h2>1. Directory Structure & Organization</h2>
+    <p>The codebase is structured modularly. Here is the layout of the primary folders and files you will interact with:</p>
+    <ul>
+      <li><strong>/src/lib/</strong>: Contains the hardcoded template datasets. The templates have been separated into dedicated files:
+        <ul>
+          <li><span class="highlight">org-goals.ts</span>: Master list of strategic Organization Goals.</li>
+          <li><span class="highlight">smart-goals.ts</span>: Measurable target goals linked to parent objectives.</li>
+          <li><span class="highlight">action-plans.ts</span>: Individual tasks and assignees.</li>
+          <li><span class="highlight">challenges.ts</span>: Raised blockers and severity registers.</li>
+          <li><span class="highlight">solutions.ts</span>: Resolution blueprints and active owners.</li>
+          <li><span class="highlight">mock-data.ts</span>: Aggregates and re-exports the individual files to prevent broken paths.</li>
+        </ul>
+      </li>
+      <li><strong>/src/hooks/use-workspace-store.tsx</strong>: Holds the state provider. It retrieves stored items from the browser and exposes them to the app.</li>
+      <li><strong>/src/routes/</strong>: Routes for different pages. The parent template <span class="highlight">__root.tsx</span> wraps the site, and subpages render inside the main panel.</li>
+    </ul>
+
+    <div class="page-break"></div>
+
+    <h2>2. Data Structure & Dynamic Assignment</h2>
+    <h3>Organization Goal Elements</h3>
+    <p>Every Organization Goal contains specific elements. Here is how they are populated:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Element Key</th>
+          <th>Description</th>
+          <th>Assignment Method</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="code-style">id</td>
+          <td>Unique key string used internally by React and databases.</td>
+          <td><strong>System Assigned</strong>: Automatically generated using a millisecond timestamp when saved.</td>
+        </tr>
+        <tr>
+          <td class="code-style">name / goal</td>
+          <td>The title or primary definition of the target objective.</td>
+          <td><strong>User Assigned</strong>: Input manually by the user in the form text field.</td>
+        </tr>
+        <tr>
+          <td class="code-style">owner</td>
+          <td>The person accountable for driving the objective.</td>
+          <td><strong>User Assigned</strong>: Text input in the form.</td>
+        </tr>
+        <tr>
+          <td class="code-style">department</td>
+          <td>Department tag (e.g. Revenue, Customer Success).</td>
+          <td><strong>User Assigned</strong>: Selected from the dropdown list.</td>
+        </tr>
+        <tr>
+          <td class="code-style">startDate / endDate</td>
+          <td>The timeline duration of the goal.</td>
+          <td><strong>User Assigned</strong>: Selected via the date pickers.</td>
+        </tr>
+        <tr>
+          <td class="code-style">description</td>
+          <td>Paragraph detailing strategic alignment.</td>
+          <td><strong>User Assigned</strong>: Written in the form text area.</td>
+        </tr>
+        <tr>
+          <td class="code-style">progress</td>
+          <td>Completion percentage indicator (0-100).</td>
+          <td><strong>System Calculated</strong>: Defaults to 0 on creation, updating based on related targets.</td>
+        </tr>
+        <tr>
+          <td class="code-style">status</td>
+          <td>Goal phase (Not Started, In Progress, At Risk, Completed).</td>
+          <td><strong>System Assigned</strong>: Defaults to "Not Started" when initialized.</td>
+        </tr>
+        <tr>
+          <td class="code-style">smartGoalCount</td>
+          <td>Total number of child SMART goals linked to this parent.</td>
+          <td><strong>System Calculated</strong>: Dynamically computed by checking matched IDs in the store.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="page-break"></div>
+
+    <h2>3. Application-Layer Data Binding Flow</h2>
+    <p>The system binds hardcoded default templates to a live browser view through a dynamic sync loop:</p>
+    <ol>
+      <li><strong>Bootstrapping (Boot & LocalStorage Check)</strong>:
+        <br>When the application boots, the workspace store provider initializes React states. It checks the browser's persistent cache (<strong>LocalStorage</strong>). If saved data is found, it loads it. If none is found, it loads the default values from your modular data files (e.g. <span class="highlight">org-goals.ts</span>) and creates the browser cache keys.
+      </li>
+      <li><strong>State Broadcast</strong>:
+        <br>The store places the states inside a React context container. The root page template (<span class="highlight">__root.tsx</span>) wraps the pages inside this context, making the variables globally accessible.
+      </li>
+      <li><strong>Page Reading</strong>:
+        <br>A page route (like <span class="highlight">/organization-goals</span>) reads the active goals state from the context. It loops over the goals array and dynamically displays cards, charts, and values.
+      </li>
+      <li><strong>Mutations & Caching</strong>:
+        <br>When you create a goal or change task items, the store modifies the state array. It immediately serializes the new state and saves it to LocalStorage, causing the site to re-render in real-time without losing changes on page refresh.
+      </li>
+    </ol>
+
+    <h2>4. Advanced System Debugging</h2>
+    <h3>A. Split Server vs. Client Logging</h3>
+    <p>Since the application uses Server-Side Rendering (SSR), prints execute in two different layers:</p>
+    <ul>
+      <li><strong>Terminal</strong>: Code executed during initial page load prints to the command line terminal running the project server.</li>
+      <li><strong>Browser Console</strong>: Interaction-based code (like routing or button click handlers) prints to the developer tools console.</li>
+    </ul>
+
+    <h3>B. Inspecting Caches and Live Objects</h3>
+    <p>You can interact with your application-layer states directly in the browser:</p>
+    <ul>
+      <li><strong>Inspect LocalStorage</strong>: Open DevTools, go to the <strong>Application</strong> tab, expand the <strong>Local Storage</strong> sidebar menu, and select the site URL. You will see values stored under keys like <span class="highlight">ns_org_goals</span>.</li>
+      <li><strong>Log Live Data</strong>: Open the DevTools **Console** and run the following command to view your organization goals immediately:
+        <br><span class="highlight">JSON.parse(localStorage.getItem('ns_org_goals'))</span>
+      </li>
+    </ul>
+
+    <h3>C. Setting Breakpoints</h3>
+    <ol>
+      <li>Open DevTools and go to the <strong>Sources</strong> panel.</li>
+      <li>Press <strong>Ctrl + P</strong> and search for the component or store file (e.g. <span class="highlight">top-bar.tsx</span>).</li>
+      <li>Set a breakpoint by clicking a line number.</li>
+      <li>Perform the action on the site to trigger that code line. The page will pause, allowing you to step through execution step-by-step.</li>
+    </ol>
+
+    <footer>
+      Northstar Project Documentation • System Architecture & Reference Manual
+    </footer>
+  </div>
+</body>
+</html>
